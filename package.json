@@ -10,8 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "framer-motion": "^12.23.12",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-avatar": "^5.0.4",
+    "react-dom": "^19.1.0",
+    "react-tooltip": "^5.29.1",
+    "tailwind-scrollbar": "^4.0.2",
+    "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
