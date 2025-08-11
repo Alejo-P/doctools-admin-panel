@@ -67,7 +67,7 @@ const UserAvatar = ({
                             group-hover:rotate-15
                         `}/>
                     </div>
-                ) : (
+                ) : Object.keys(user).includes("is_connected") && (
                     <div className={`
                         absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 flex items-center justify-center
                         ${isDark 
@@ -85,7 +85,7 @@ const UserAvatar = ({
                     </div>
                 )
             }
-            <ReactTooltip id={`profile ${user?.id}`} place={placeTooltip} effect="solid" />
+            <ReactTooltip id={`profile ${user?.id}`} place={placeTooltip} effect="solid" delayShow={100} />
         </div>
     )
 }

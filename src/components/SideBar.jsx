@@ -1,104 +1,96 @@
-import React from 'react'
-import { motion, AnimatePresence } from "framer-motion";
+// @ts-check
+import React, { useState } from 'react'
+import { Tooltip as ReactTooltip } from 'react-tooltip';
+import { FaMoon } from "react-icons/fa";
+import { MdOutlineWbSunny } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
+import { FaShieldAlt } from "react-icons/fa";
+import { BiSolidUserAccount } from "react-icons/bi";
+import { MdSpaceDashboard } from "react-icons/md";
+import { GoGraph } from "react-icons/go";
 
-import { ROLES } from '@constants/roles';
-import NavButton from '@components/NavButton';
-import NavButtonSqueleton from './NavButtonSqueleton';
+import SideBarItem from './SideBarItem';
+import UserAvatar from './UserAvatar';
+import Logo from '../assets/react.svg';
 
 const SideBar = ({
     isDark,
-    isLoading,
-    groupedItems,
     user,
-    handleDrawer,
-    handleRefresh,
-    drawerOpen
+    changeTheme
 }) => {
-    const hasItems = Object.values(groupedItems).some(items => items.length > 0);
-    return (
-        <AnimatePresence>
-            {drawerOpen && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="fixed inset-0 z-50"
-                >
-                    {/* Fondo oscurecido */}
-                    <div 
-                        className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fadeIn"
-                        onClick={handleDrawer}
-                    />
+    const [isHovered, setIsHovered] = useState(false)
+    
+    const menuItems = [
+        { icon: MdSpaceDashboard, label: 'Dashboard' },
+        { icon: FaUsers, label: 'Usuarios' },
+        { icon: FaShieldAlt, label: 'Roles' },
+        { icon: BiSolidUserAccount, label: 'Avatares' },
+        { icon: GoGraph, label: 'Estadísticas' },
+    ];
 
-                    {/* Drawer */}
-                    <motion.div
-                        initial={{ x: -300 }}
-                        animate={{ x: 0 }}
-                        exit={{ x: -300 }}
-                        transition={{ duration: 0.3 }}
-                        className={`absolute top-10 left-0 h-[calc(100%-40px)] w-64 shadow-lg z-50 border-t border-r border-b
-                            ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'}
-                            rounded-tr-lg rounded-br-lg p-2 overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar
-                        `}
-                    >
-                        {/* Contenido del Drawer */}
-                        <div className="flex flex-col gap-2 items-center justify-between p-2 w-full mt-13 mb-2">
-                            {
-                                isLoading ? (
-                                    // Mostramos varios esqueletos mientras carga
-                                    <>
-                                        {[...Array(6)].map((_, i) => (
-                                            <NavButtonSqueleton key={i} isDark={isDark} />
-                                        ))}
-                                    </>
-                                ) : hasItems ? (
-                                    Object.entries(groupedItems).map(([role, items]) => (
-                                        <div key={role} className="flex flex-col gap-2 w-full items-center">
-                                            {user?.roles?.includes(ROLES.ADMIN) && (
-                                                <div className={`text-sm font-semibold uppercase text-center mb-1 px-3 py-1 rounded shadow
-                                                    ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'}`}>
-                                                    Acceso para {role === ROLES.ADMIN ? 'administradores' : 'usuarios'}
-                                                </div>
-                                            )}
-                                            {items.map(item => (
-                                                <NavButton
-                                                    key={item.path}
-                                                    to={item.path}
-                                                    active={item.active}
-                                                    icon={item.icon}
-                                                    tooltip={item.tooltip}
-                                                    isDark={isDark}
-                                                    onNavigate={handleDrawer}
-                                                />
-                                            ))}
-                                        </div>
-                                    ))
-                                ) : (
-                                    // Si no hay botones, mostramos un mensaje
-                                    <div className={`flex flex-col items-center justify-center h-full`}>
-                                        <div className={`text-sm font-semibold uppercase text-center mb-2 mt-2 px-3 py-1 rounded
-                                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'} shadow`}>
-                                            No tienes acceso a ninguna sección
-                                        </div>
-                                        <div className={`text-sm font-semibold uppercase text-center mb-2 mt-2 px-3 py-1 rounded
-                                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'} shadow`}>
-                                            Comunicate con un administrador o intenta
-                                            <button
-                                                onClick={handleRefresh}
-                                                className={`text-blue-500 hover:text-blue-700 uppercase ml-1`}
-                                            >
-                                                Recargar
-                                            </button>
-                                        </div>
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </motion.div>
-                </motion.div>
-            )}
-        </AnimatePresence>
+    const handleTheme = () => {
+        changeTheme(!isDark);
+    }
+    return (
+        <div
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className={`absolute top-5 left-3 h-[calc(100%-40px)]
+        flex items-center justify-between flex-col
+        ${isHovered ? 'w-45' : 'w-20'}
+        shadow-lg z-50 border shadow-gray-300
+        ${isDark ? 'bg-gray-800 text-white border-gray-300' : 'bg-gray-200 text-gray-900 border-gray-400'}
+        rounded-lg p-2 overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar transition-all duration-300
+      `}
+        >
+            {/* Logo */}
+            <div className="flex items-center justify-center mt-4">
+                <img src={Logo} alt="React Logo" className="w-10 h-10" />
+            </div>
+
+            {/* Menú */}
+            <div>
+                {menuItems.map((item, index) => (
+                    <SideBarItem
+                        key={index}
+                        icon={item.icon}
+                        label={item.label}
+                        isHovered={isHovered}
+                        isDark={isDark}
+                    />
+                ))}
+            </div>
+
+            <div className="p-2 mb-2 flex flex-row items-center justify-center gap-2">
+                <UserAvatar
+                    user={user}
+                    isDark={isDark}
+                    size={35}
+                    placeTooltip="left"
+                />
+                {isHovered && (
+                    <>
+                        <button
+                            className={`p-2 rounded-lg transition-all duration-300
+                    ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                    hover:scale-95 shadow-lg hover:shadow-xl`}
+                            title="Cambiar tema"
+                            data-tooltip-id="temaLabel"
+                            data-tooltip-content="Cambiar tema"
+                            onClick={handleTheme}
+                        >
+                            {isDark ? <MdOutlineWbSunny className="text-2xl" /> : <FaMoon className="text-2xl" />}
+                        </button>
+                        <ReactTooltip id="temaLabel" place="top" delayShow={100}>
+                            <div className={`p-2 rounded-lg shadow-lg
+                    ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
+                `}
+                            />
+                        </ReactTooltip>
+                    </>
+                )}
+            </div>
+        </div>
     )
 }
 
