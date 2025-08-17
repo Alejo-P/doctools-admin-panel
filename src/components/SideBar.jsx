@@ -1,5 +1,5 @@
 // @ts-check
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { FaMoon } from "react-icons/fa";
@@ -14,7 +14,6 @@ import { IoLogOut } from 'react-icons/io5';
 import SideBarItem from './SideBarItem';
 import UserAvatar from './UserAvatar';
 import Logo from '../assets/react.svg';
-import UserCard from './UserCard';
 import ProfileCard from './ProfileCard';
 
 const SideBar = ({
@@ -51,11 +50,6 @@ const SideBar = ({
     const handleEditProfile = () => {
         // Logic to edit profile
     }
-
-    useEffect(() => {
-        console.log(location.pathname);
-        const currentItem = menuItems.find(item => item.to === location.pathname);
-    }, [location.pathname]);
 
     return (
         <div

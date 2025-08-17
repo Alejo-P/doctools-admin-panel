@@ -16,9 +16,9 @@ const UserCard = ({
     const isOwner = authUser?.id === user?.id;
 
     return (
-        <div className={`grid grid-cols-[20%_80%] md:w-95 rounded-lg border p-1 mb-2
-            ${isDark ? 'border-gray-300 bg-gray-800' : 'border-gray-400 bg-gray-200'}
-            shadow-lg transition-all duration-300
+        <div className={`grid grid-cols-[20%_80%] md:w-95 rounded-lg border p-1 mb-2 shadow-lg shadow-gray-500
+            ${isDark ? 'border-gray-300 bg-gray-800' : 'border-gray-400 bg-gray-100'}
+            transition-all duration-300
         `}>
             <div className={`col-span-2 text-center font-bold text-lg mb-2 border-b
                 ${isDark ? 'border-gray-300' : 'border-gray-400'}
@@ -59,7 +59,7 @@ const UserCard = ({
                                 <span>
                                     <FaPen className='text-lg' />
                                 </span>
-                                Editar tu perfil
+                                Editar perfil
                             </button>
                             <button
                                 className={`flex gap-2 p-2 rounded-lg transition-all duration-300
@@ -82,7 +82,7 @@ const UserCard = ({
                                 <span>
                                     <FaPen className='text-lg' />
                                 </span>
-                                Editar perfil de {user?.name || "N/A"}
+                                Editar perfil
                             </button>
                             <button
                                 className={`flex gap-2 p-2 rounded-lg transition-all duration-300
