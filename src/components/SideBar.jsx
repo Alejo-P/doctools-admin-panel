@@ -14,6 +14,7 @@ import SideBarItem from './SideBarItem';
 import UserAvatar from './UserAvatar';
 import Logo from '../assets/react.svg';
 import UserCard from './UserCard';
+import ProfileCard from './ProfileCard';
 
 const SideBar = ({
     isDark,
@@ -44,6 +45,10 @@ const SideBar = ({
 
     const handleMenuOptionClick = (label) => {
         onChangeOptionSelected(label);
+    }
+
+    const handleEditProfile = () => {
+        // Logic to edit profile
     }
 
     return (
@@ -95,7 +100,7 @@ const SideBar = ({
                                         user={user}
                                         isDark={isDark}
                                         size={36}
-                                        onClick={handleProfileCard}
+                                        onClick={handleEditProfile}
                                     />
                                 </div>
                                 <div className='flex flex-col gap-1 justify-center items-start text-sm'>
@@ -146,9 +151,15 @@ const SideBar = ({
             </div>
             {
                 showProfileCard && (
-                    <UserCard
-                        isDark={isDark}
+                    <ProfileCard
                         user={user}
+                        isDark={isDark}
+                        logout={logout}
+                        handleEditProfile={handleEditProfile}
+                        handleFocusOut={handleProfileCard}
+                        handleChangeTheme={handleTheme}
+                        showCard={showProfileCard}
+                        isMobile={isMobile}
                     />
                 )
             }
