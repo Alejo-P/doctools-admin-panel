@@ -6,8 +6,10 @@ import { useWindowSize } from '@hooks/useWindowSize';
 const AppContext = createContext()
 
 export const AppProvider = ({ children }) => {
-    const [isDark, setIsDark] = useState(localStorage.getItem('isDark') || "true"=== 'true');
+    const [isDark, setIsDark] = useState(localStorage.getItem('isDark') || "tru"=== 'true');
+    const [menuOptionSelected, setMenuOptionSelected] = useState("Dashboard");
     const windowSize = useWindowSize();
+    const isMobile = windowSize.width < 425;
 
 
     const handleThemeToggle = () => {
@@ -17,7 +19,7 @@ export const AppProvider = ({ children }) => {
 
     const handleNotificacion = (type, message, duration) => {
         toast[type](message, {
-            position: windowSize.width < 768 ? "top-center" : "bottom-right",
+            position: isMobile ? "top-center" : "bottom-right",
             autoClose: duration,
             hideProgressBar: false,
             closeOnClick: true,
@@ -28,11 +30,18 @@ export const AppProvider = ({ children }) => {
         });
     };
 
+    const handleChangeMenuOption = (option) => {
+        setMenuOptionSelected(option);
+    }
+
     const value = useMemo(() => ({
         isDark,
+        isMobile,
+        menuOptionSelected,
+        handleChangeMenuOption,
         handleThemeToggle,
         handleNotificacion
-    }), [isDark])
+    }), [isDark, isMobile, menuOptionSelected]);
 
     return (
         <AppContext.Provider value={value}>

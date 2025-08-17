@@ -2,13 +2,11 @@ import React , { useState, useEffect } from 'react'
 import { IoLogIn } from "react-icons/io5";
 import CustomInput from './CustomInput';
 import { useAppContext } from '@contexts/AppProvider';
-import { useAxios } from '@hooks/useAxios';
 
 const LoginForm = ({
-    isDark
+    isDark,
+    handleLogin
 }) => {
-    const { handleNotificacion } = useAppContext();
-    const { request } = useAxios();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -23,21 +21,7 @@ const LoginForm = ({
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (Object.values(formData).some(value => value === '')) {
-            handleNotificacion('error', 'Por favor, completa todos los campos', 4000);
-            return;
-        }
-
-        await request({
-            method: 'post',
-            url: '/login',
-            payload: formData,
-            notify: {
-                success: true,
-                error: true
-            }
-        });
+        await handleLogin(formData);
     };
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Avatar from "react-avatar";
 import { FaPen } from "react-icons/fa";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
@@ -11,9 +11,9 @@ const UserAvatar = ({
     round = true,
     size = 50,
     maxInitials = 2,
-    placeTooltip = 'top',
+    placeTooltip = '',
 }) => {
-    const handleAvatarModal = () => {
+    const handleClickAvatar = () => {
         if (isLoading) return;
         onClick && onClick(user);
     }
@@ -33,7 +33,7 @@ const UserAvatar = ({
             `}
             data-tooltip-id={`profile ${user?.id}`}
             data-tooltip-content={`${isLoading ? 'Cargando...' : `Perfil de ${user?.name || "N/A"}`}`}
-            onClick={handleAvatarModal}
+            onClick={handleClickAvatar}
         >
             <Avatar
                 src={user?.avatar?.url || ''}
@@ -52,7 +52,7 @@ const UserAvatar = ({
             {
                 onClick ? (
                     <div className={`
-                        absolute bottom-0 right-0 w-5 h-5 rounded-full border-2 flex items-center justify-center
+                        absolute bottom-0 right-0 rounded-full border-2 flex items-center justify-center
                         ${isDark 
                             ? 'bg-gray-700 border-gray-500 shadow-md shadow-black/30 text-white' 
                             : 'bg-white border-gray-300 shadow-md shadow-gray-400/30 text-gray-700'
@@ -60,7 +60,10 @@ const UserAvatar = ({
                         transition-all duration-300 ease-in-out
                         ring-1 ring-offset-1 ${isDark ? 'ring-white/20' : 'ring-black/10'}
                         ${isLoading ? 'animate-pulse cursor-not-allowed' : ''}
-                    `}>
+                    `}
+                        title="Editar perfil"
+                        style={{ width: size / 4, height: size / 4, minWidth: 16, minHeight: 16 }}
+                    >
                         <FaPen className={`
                             text-[10px]
                             transition-transform duration-300 ease-in-out
@@ -85,7 +88,12 @@ const UserAvatar = ({
                     </div>
                 )
             }
-            <ReactTooltip id={`profile ${user?.id}`} place={placeTooltip} effect="solid" delayShow={100} />
+            {/* Tooltip */}
+            {
+                (placeTooltip !== '') && (
+                    <ReactTooltip id={`profile ${user?.id}`} place={placeTooltip} effect="solid" delayShow={100} />
+                )
+            }
         </div>
     )
 }

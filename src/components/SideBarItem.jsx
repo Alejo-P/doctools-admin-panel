@@ -1,29 +1,59 @@
-import React from 'react'
+import React from 'react';
 import { motion } from 'framer-motion';
+import { Tooltip as ReactTooltip } from 'react-tooltip';
+import clsx from 'clsx';
 
-const SideBarItem = ({ icon: Icon, label, isHovered, isDark }) => {
-  return (
-    <motion.div
-      className={`flex rounded-lg p-2 mt-2 mb-2 transition-all duration-300 cursor-pointer border
-        ${isDark ? 'bg-gray-600 text-white border-gray-300' : 'bg-gray-300 text-gray-900 border-gray-600'}
-        ${isHovered ? 'w-40 justify-start' : 'w-14 justify-center'}
-      `}
-      whileHover={{ scale: 1.05 }}
-    >
-      <Icon className="w-5 h-5" />
-      {isHovered && (
-        <motion.span
-          className="ml-2 whitespace-nowrap overflow-hidden"
-          title={label}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          {label}
-        </motion.span>
-      )}
-    </motion.div>
+const SideBarItem = ({ icon: Icon, label, isDark, onClick, isSelected, isMobile = false }) => {
+
+  const handleClick = () => {
+    onClick(label);
+  };
+
+  const baseClasses =
+    "flex flex-1 p-2 transition-all duration-300 w-10 hover:w-40 justify-center group";
+
+  const textClasses = clsx(
+    {
+      "text-blue-400 border-b-2 border-blue-400": isSelected,
+      "text-white cursor-pointer": isDark && !isSelected,
+      "text-gray-900 cursor-pointer": !isDark && !isSelected,
+    }
   );
-}
 
-export default SideBarItem
+  return (
+    <>
+      <motion.div
+        className={clsx(baseClasses, textClasses)}
+        title={label}
+        data-tooltip-id={`sidebar-item-tooltip-${label}`}
+        data-tooltip-content={label}
+        onClick={handleClick}
+        layout
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      >
+        <Icon className="w-5 h-5" />
+        {!isMobile && (
+          <motion.span
+            className={`hidden group-hover:block ml-2 whitespace-nowrap overflow-hidden text-ellipsis
+              ${isSelected ? 'text-blue-400 sm:block' : ''}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {label}
+          </motion.span>
+        )}
+      </motion.div>
+
+      {isMobile && (
+        <ReactTooltip
+          id={`sidebar-item-tooltip-${label}`}
+          place="bottom"
+          delayShow={100}
+        />
+      )}
+    </>
+  );
+};
+
+export default SideBarItem;
