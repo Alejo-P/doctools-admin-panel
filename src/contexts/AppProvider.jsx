@@ -6,14 +6,18 @@ import { useWindowSize } from '@hooks/useWindowSize';
 const AppContext = createContext()
 
 export const AppProvider = ({ children }) => {
-    const [isDark, setIsDark] = useState(localStorage.getItem('isDark') || "tru"=== 'true');
+    const [isDark, setIsDark] = useState(localStorage.getItem('isDark') === 'true');
     const windowSize = useWindowSize();
     const isMobile = windowSize.width < 425;
-
 
     const handleThemeToggle = () => {
         localStorage.setItem('isDark', !isDark);
         setIsDark(prev => !prev);
+    }
+
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
     }
 
     const handleNotificacion = (type, message, duration) => {
@@ -33,7 +37,8 @@ export const AppProvider = ({ children }) => {
         isDark,
         isMobile,
         handleThemeToggle,
-        handleNotificacion
+        handleNotificacion,
+        formatDate
     }), [isDark, isMobile]);
 
     return (

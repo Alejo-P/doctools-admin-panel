@@ -8,9 +8,10 @@ const AdminContext = createContext();
 export const AdminProvider = ({ children }) => {
     const { handleNotificacion } = useAppContext();
     const { user, setUser } = useAuthContext();
-    const { request } = useAxios(); // ¡aquí la magia!
+    const { request } = useAxios();
     const [usersList, setUsersList] = useState([]);
     const [rolesList, setRolesList] = useState([]);
+    const [avatarList, setAvatarList] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const getAllUsers = async () => {
@@ -238,6 +239,23 @@ export const AdminProvider = ({ children }) => {
         }
     }
 
+    const getAvatarList = async () => {
+        setLoading(true);
+        const response = await request({
+            method: 'get',
+            url: '/avatars',
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+
+        if (response) {
+            setAvatarList(response);
+        }
+        setLoading(false);
+    }
+
     const sendVerfyEmail = (userId) => {
         setLoading(true);
         const response = request({
@@ -259,6 +277,7 @@ export const AdminProvider = ({ children }) => {
         loading,
         usersList,
         rolesList,
+        avatarList,
         setRolesList,
         setUsersList,
         getAllUsers,
@@ -271,9 +290,10 @@ export const AdminProvider = ({ children }) => {
         setLoading,
         addRole,
         removeRole,
-        getRolesList
-    }), [usersList, loading, rolesList]);
-    
+        getRolesList,
+        getAvatarList
+    }), [usersList, loading, rolesList, avatarList]);
+
     return (
         <AdminContext.Provider value={contextValue}>
             {children}
