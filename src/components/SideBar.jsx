@@ -82,7 +82,7 @@ const SideBar = ({
                                     data-tooltip-content="Cambiar tema"
                                     onClick={handleTheme}
                                 >
-                                    {isDark ? <MdOutlineWbSunny className="text-2xl" /> : <FaMoon className="text-2xl" />}
+                                    {isDark ? <FaMoon className="text-2xl" /> : <MdOutlineWbSunny className="text-2xl" />}
                                 </button>
                                 <ReactTooltip id="temaLabel" place="top" delayShow={100}/>
                                 <UserAvatar
@@ -127,7 +127,7 @@ const SideBar = ({
                                         data-tooltip-content="Cambiar tema"
                                         onClick={handleTheme}
                                     >
-                                        {isDark ? <MdOutlineWbSunny className="text-2xl" /> : <FaMoon className="text-2xl" />}
+                                        {isDark ? <FaMoon className="text-2xl" /> : <MdOutlineWbSunny className="text-2xl" />}
                                     </button>
                                     <ReactTooltip id="temaLabel" place="top" delayShow={100}/>
                                     <button

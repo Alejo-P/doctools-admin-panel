@@ -75,7 +75,7 @@ const ProfileCard = ({
                                             data-tooltip-content="Cambiar tema"
                                             onClick={handleChangeTheme}
                                         >
-                                            {isDark ? <MdOutlineWbSunny className="text-2xl" /> : <FaMoon className="text-2xl" />}
+                                            {isDark ? <FaMoon className="text-2xl" /> : <MdOutlineWbSunny className="text-2xl" />}
                                         </button>
                                         <ReactTooltip id="temaLabel" place="top" delayShow={100}/>
                                     </>
