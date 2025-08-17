@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import clsx from 'clsx';
 
-const SideBarItem = ({ icon: Icon, label, isDark, onClick, isSelected, isMobile = false }) => {
+const SideBarItem = ({ icon: Icon, label, to = '', isDark, onClick, isSelected, isMobile = false }) => {
 
   const handleClick = () => {
-    onClick(label);
+    onClick(to);
   };
 
   const baseClasses =

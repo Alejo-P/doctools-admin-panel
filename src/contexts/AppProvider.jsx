@@ -7,7 +7,6 @@ const AppContext = createContext()
 
 export const AppProvider = ({ children }) => {
     const [isDark, setIsDark] = useState(localStorage.getItem('isDark') || "tru"=== 'true');
-    const [menuOptionSelected, setMenuOptionSelected] = useState("Dashboard");
     const windowSize = useWindowSize();
     const isMobile = windowSize.width < 425;
 
@@ -30,18 +29,12 @@ export const AppProvider = ({ children }) => {
         });
     };
 
-    const handleChangeMenuOption = (option) => {
-        setMenuOptionSelected(option);
-    }
-
     const value = useMemo(() => ({
         isDark,
         isMobile,
-        menuOptionSelected,
-        handleChangeMenuOption,
         handleThemeToggle,
         handleNotificacion
-    }), [isDark, isMobile, menuOptionSelected]);
+    }), [isDark, isMobile]);
 
     return (
         <AppContext.Provider value={value}>

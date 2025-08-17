@@ -7,7 +7,7 @@ import { useAuthContext } from '@contexts/AuthProvider'
 import SideBar from '@components/SideBar'
 
 const Dashboard = () => {
-    const { isDark, handleThemeToggle, isMobile, menuOptionSelected, handleChangeMenuOption } = useAppContext();
+    const { isDark, handleThemeToggle, isMobile } = useAppContext();
     const { user, logout } = useAuthContext();
 
     const handleLogout = async () => {
@@ -24,8 +24,6 @@ const Dashboard = () => {
                 changeTheme={handleThemeToggle}
                 logout={handleLogout}
                 isMobile={isMobile}
-                optionSelected={menuOptionSelected}
-                onChangeOptionSelected={handleChangeMenuOption}
             />
             <ToastContainer
                 newestOnTop

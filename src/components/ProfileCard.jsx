@@ -1,4 +1,3 @@
-// @ts-check
 import React from 'react'
 import UserAvatar from './UserAvatar'
 import { MdOutlineWbSunny } from 'react-icons/md'

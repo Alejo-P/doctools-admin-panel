@@ -1,5 +1,6 @@
 // @ts-check
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { FaMoon } from "react-icons/fa";
 import { MdOutlineWbSunny } from "react-icons/md";
@@ -22,17 +23,17 @@ const SideBar = ({
     changeTheme,
     logout,
     isMobile = false,
-    optionSelected,
-    onChangeOptionSelected
 }) => {
     const [showProfileCard, setShowProfileCard] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const menuItems = [
-        { icon: MdSpaceDashboard, label: 'Dashboard' },
-        { icon: FaUsers, label: 'Usuarios' },
-        { icon: FaShieldAlt, label: 'Roles' },
-        { icon: BiSolidUserAccount, label: 'Avatares' },
-        { icon: GoGraph, label: 'Estadísticas' },
+        { icon: MdSpaceDashboard, label: 'Dashboard', to: '/dashboard/' },
+        { icon: FaUsers, label: 'Usuarios', to: '/dashboard/users' },
+        { icon: FaShieldAlt, label: 'Roles', to: '/dashboard/roles' },
+        { icon: BiSolidUserAccount, label: 'Avatares', to: '/dashboard/avatars' },
+        { icon: GoGraph, label: 'Estadísticas', to: '/dashboard/stats' },
     ];
 
     const handleTheme = () => {
@@ -43,13 +44,18 @@ const SideBar = ({
         setShowProfileCard(!showProfileCard);
     }
 
-    const handleMenuOptionClick = (label) => {
-        onChangeOptionSelected(label);
+    const handleMenuOptionClick = (goTo) => {
+        navigate(goTo);
     }
 
     const handleEditProfile = () => {
         // Logic to edit profile
     }
+
+    useEffect(() => {
+        console.log(location.pathname);
+        const currentItem = menuItems.find(item => item.to === location.pathname);
+    }, [location.pathname]);
 
     return (
         <div
@@ -170,9 +176,10 @@ const SideBar = ({
                         key={index}
                         icon={item.icon}
                         label={item.label}
+                        to={item.to}
                         isDark={isDark}
                         onClick={handleMenuOptionClick}
-                        isSelected={optionSelected === item.label}
+                        isSelected={location.pathname === item.to}
                         isMobile={isMobile}
                     />
                 ))}
