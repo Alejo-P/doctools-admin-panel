@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { IoClose } from "react-icons/io5";
 
 import ProfileForm from '@components/ProfileForm';
+import UserAccountActions from '@components/UserAccountActions';
 
 const EditUserModal = ({
     user,
@@ -12,6 +13,18 @@ const EditUserModal = ({
     handleUpdate
 }) => {
     const [isLoading, setIsLoading] = useState(false);
+
+    const handleDisableProfile = async () => {
+        // Logic to disable user profile
+    }
+
+    const handleEnableProfile = async () => {
+        // Logic to enable user profile
+    }
+
+    const handleSendVerifyEmail = async () => {
+        // Logic to send verification email
+    }
 
     const handleSubmit = async (formData) => {
         setIsLoading(true);
@@ -72,6 +85,13 @@ const EditUserModal = ({
                                 isDark={isDark}
                                 onSubmit={handleSubmit}
                                 isLoading={isLoading}
+                            />
+                            <UserAccountActions
+                                user={user}
+                                onDisableProfile={handleDisableProfile}
+                                onEnableProfile={handleEnableProfile}
+                                onSendVerifyEmail={handleSendVerifyEmail}
+                                isDark={isDark}
                             />
                         </div>
                     </motion.div>

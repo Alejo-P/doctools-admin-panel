@@ -6,6 +6,7 @@ import { useAppContext } from '@contexts/AppProvider';
 import UserCard from '@components/UserCard';
 import ProfileForm from '@components/ProfileForm';
 import EditUserModal from '@modals/EditUserModal';
+import UserAccountActions from '@components/UserAccountActions';
 import LoadingCard from '@components/LoadingCard';
 
 const UsersManagerPage = () => {
@@ -19,6 +20,18 @@ const UsersManagerPage = () => {
         setSelectedUser(null);
         setShowCreateUserModal(false);
         await getAllUsers();
+    }
+
+    const handleDisableProfile = async () => {
+        // Logic to disable user profile
+    }
+
+    const handleEnableProfile = async () => {
+        // Logic to enable user profile
+    }
+
+    const handleSendVerifyEmail = async () => {
+        // Logic to send verification email
     }
 
     const handleSelectUser = (user) => {
@@ -89,6 +102,13 @@ const UsersManagerPage = () => {
                                                 handleAvatarModal={() => { }}
                                                 handleRolesModal={() => { }}
                                                 isLoading={loading}
+                                            />
+                                            <UserAccountActions
+                                                user={selectedUser}
+                                                onDisableProfile={handleDisableProfile}
+                                                onEnableProfile={handleEnableProfile}
+                                                onSendVerifyEmail={handleSendVerifyEmail}
+                                                isDark={isDark}
                                             />
                                         </>
                                     )
