@@ -1,4 +1,3 @@
-// @ts-check
 import React from 'react'
 import UserAvatar from './UserAvatar';
 import { Tooltip as ReactTooltip } from 'react-tooltip';

@@ -95,7 +95,6 @@ export const AuthProvider = ({ children }) => {
     };
 
     const updateProfile = async (data) => {
-        setLoading(true);
         const response = await request({
             method: 'put',
             url: '/profile',
@@ -110,11 +109,11 @@ export const AuthProvider = ({ children }) => {
             handleNotificacion('success', response.msg, 5000);
             setUser(response.user);
         }
-        setLoading(false);
+        const success = response ? true : false;
+        return success;
     };
 
     const updatePassword = async (data) => {
-        setLoading(true);
         const passData = {
             current_password: data.password,
             new_password: data.newPassword,
@@ -133,7 +132,8 @@ export const AuthProvider = ({ children }) => {
         if (response) {
             handleNotificacion('success', response.msg, 5000);
         }
-        setLoading(false);
+        const success = response ? true : false;
+        return success;
     };
 
     const uploadAvatar = async (formData) => {

@@ -18,6 +18,7 @@ const ProfileForm = ({
     const { user: authUser } = useAuthContext();
     const [enableButton, setEnableButton] = useState(false);
     const [formData, setFormData] = useState({
+        id: user.id || '',
         name: user.name || '',
         email: user.email || '',
         roles: user.roles || []
@@ -49,6 +50,7 @@ const ProfileForm = ({
 
     useEffect(() => {
         const newData = {
+            id: user.id || '',
             name: user.name || '',
             email: user.email || '',
             roles: user.roles || []

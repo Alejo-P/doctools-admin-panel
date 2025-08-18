@@ -17,14 +17,20 @@ const EditProfileModal = ({
 
     const handleUpdateProfile = async (userData) => {
         setIsLoading(true);
-        await updateProfile(userData);
+        const success = await updateProfile(userData);
         setIsLoading(false);
+        if (success) {
+            onClose();
+        }
     };
 
     const handleUpdatePassword = async (passwordData) => {
         setIsLoading(true);
-        await updatePassword(passwordData);
+        const success = await updatePassword(passwordData);
         setIsLoading(false);
+        if (success) {
+            onClose();
+        }
     };
 
     return (

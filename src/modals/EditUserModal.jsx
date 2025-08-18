@@ -12,6 +12,16 @@ const EditUserModal = ({
     handleUpdate
 }) => {
     const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubmit = async (formData) => {
+        setIsLoading(true);
+        const success = await handleUpdate(formData);
+        setIsLoading(false);
+        if (success) {
+            onClose();
+        }
+    }
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -60,7 +70,7 @@ const EditUserModal = ({
                             <ProfileForm
                                 user={user}
                                 isDark={isDark}
-                                onSubmit={handleUpdate}
+                                onSubmit={handleSubmit}
                                 isLoading={isLoading}
                             />
                         </div>
