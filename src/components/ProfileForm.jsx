@@ -1,0 +1,122 @@
+// @ts-check
+import React, { useState, useEffect, useRef } from 'react'
+import UserAvatar from './UserAvatar';
+import CustomInput from './CustomInput';
+import RolesField from './RolesField';
+import { IoIosSave } from 'react-icons/io';
+
+const ProfileForm = ({
+    user,
+    isDark,
+    onSubmit,
+    handleAvatarModal,
+    handleRolesModal,
+    isLoading = false
+}) => {
+    const [enableButton, setEnableButton] = useState(false);
+    const [formData, setFormData] = useState({
+        id: user.id || '',
+        name: user.name || '',
+        email: user.email || '',
+        roles: user.roles || []
+    });
+
+    const formRef = useRef(formData);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    }
+    
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit(formData);
+    }
+
+    useEffect(() => {
+        const isChanged = JSON.stringify(formRef.current) !== JSON.stringify(formData)
+        setEnableButton(isChanged);
+    }, [formData]);
+
+    useEffect(() => {
+        const newData = {
+            id: user.id || '',
+            name: user.name || '',
+            email: user.email || '',
+            roles: user.roles || []
+        }
+        formRef.current = newData;
+        setFormData(newData);
+    }, [user]);
+
+    useEffect(() => {
+        if (isLoading) {
+            setEnableButton(false);
+        }
+    }, [isLoading]);
+
+    return (
+        <div className={`flex flex-col w-full gap-4 p-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-white'} border-2 ${isDark ? 'border-gray-700' : 'border-gray-300'}`}>
+            <h2 className="text-2xl text-center font-bold">Editar perfil</h2>
+            <div className="flex items-center justify-center">
+                {/* Avatar del usuario */}
+                <UserAvatar
+                    user={user}
+                    isDark={isDark}
+                    {...(formData.id === user.id ? { onClick: handleAvatarModal } : {})}
+                    isLoading={isLoading}
+                />
+            </div>
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit} autoComplete='off'>
+                {[{ placeholder: "Tu nombre de usuario", name: "name", disabled: false, type: "username" },
+                { placeholder: "Tu correo electronico", name: "email", disabled: false, type: "email" },
+                { placeholder: "Tus roles", name: "roles", disabled: true, type: "security" }].map((field) => {
+                    if (field.name !== "roles") {
+                        return (
+                            <CustomInput
+                                key={field.name}
+                                Itype={field.type}
+                                Iname={field.name}
+                                Ivalue={formData[field.name]}
+                                IonChange={handleChange}
+                                Iplaceholder={field.placeholder}
+                                Idisabled={field.disabled}
+                            />
+                        );
+                    } else {
+                        return (
+                            <RolesField
+                                key={field.name}
+                                field={field}
+                                isDark={isDark}
+                                userId={formData.id}
+                                values={formData.roles}
+                                isAdmin={true}
+                                onClick={() => handleRolesModal()}
+                            />
+                        );
+                    }
+                })}
+                <button
+                    type="submit"
+                    className={`px-4 py-2 mb-3 rounded-lg font-bold transition-all duration-300
+                        ${!enableButton || isLoading ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
+                            : isDark ? 'bg-blue-500 hover:bg-blue-600'
+                            : 'bg-blue-600 hover:bg-blue-700'
+                        }
+                    `}
+                    disabled={!enableButton || isLoading}
+                    title={isLoading ? "Actualizando..." : "Guardar cambios"}
+                >
+                    <IoIosSave className="inline-block mr-2 text-2xl" />
+                    Actualizar
+                </button>
+            </form>
+        </div>
+    )
+}
+
+export default ProfileForm

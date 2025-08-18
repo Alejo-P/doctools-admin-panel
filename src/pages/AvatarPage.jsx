@@ -16,21 +16,26 @@ const AvatarPage = () => {
     }, [])
 
     return (
-        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 w-full h-full gap-2'>
+        <>
             {loading ? (
                 <LoadingCard />
             ) : (
-                avatarList.map(avatar => (
-                    <AvatarCard
-                        key={avatar.id}
-                        avatar={avatar}
-                        isDark={isDark}
-                        handleFormatDate={formatDate}
-                        isMobile={isMobile}
-                    />
-                ))
+                <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 w-full h-full gap-2'>
+                    {
+                        avatarList.map(avatar => (
+                            <AvatarCard
+                                key={avatar.id}
+                                avatar={avatar}
+                                isDark={isDark}
+                                handleFormatDate={formatDate}
+                                isMobile={isMobile}
+                            />
+                        ))
+                    }
+                </div>
+
             )}
-        </div>
+        </>
     )
 }
 

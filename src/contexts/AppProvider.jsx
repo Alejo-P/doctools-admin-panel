@@ -8,7 +8,7 @@ const AppContext = createContext()
 export const AppProvider = ({ children }) => {
     const [isDark, setIsDark] = useState(localStorage.getItem('isDark') === 'true');
     const windowSize = useWindowSize();
-    const isMobile = windowSize.width < 425;
+    const isMobile = windowSize.width <= 768;
 
     const handleThemeToggle = () => {
         localStorage.setItem('isDark', !isDark);
