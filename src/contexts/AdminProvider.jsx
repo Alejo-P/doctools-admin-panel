@@ -26,7 +26,7 @@ export const AdminProvider = ({ children }) => {
         });
 
         if (response) {
-            setUsersList(response);
+            setUsersList(response.filter(userInfo => userInfo.id !== user.id));
         }
         setLoading(false);
     }
@@ -103,7 +103,6 @@ export const AdminProvider = ({ children }) => {
     }
 
     const updateUser = async (userId, data) => {
-        setLoading(true);
         const response = await request({
             method: 'put',
             url: `/user/${userId}`,
@@ -123,7 +122,6 @@ export const AdminProvider = ({ children }) => {
             handleNotificacion('success', response.msg, 5000);
         }
 
-        setLoading(false);
         return response;
     }
 

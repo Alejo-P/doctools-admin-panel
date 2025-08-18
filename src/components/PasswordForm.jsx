@@ -92,7 +92,7 @@ const PasswordForm = ({
                     className={`px-4 py-2 mb-3 rounded-lg font-bold transition-all duration-300
                         ${!enableButton || isLoading ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
                             : isDark ? 'bg-blue-500 hover:bg-blue-600'
-                            : 'bg-blue-600 hover:bg-blue-700'
+                            : 'bg-blue-400 hover:bg-blue-500'
                         }
                     `}
                     disabled={!enableButton || isLoading}

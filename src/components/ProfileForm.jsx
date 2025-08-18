@@ -5,6 +5,8 @@ import CustomInput from './CustomInput';
 import RolesField from './RolesField';
 import { IoIosSave } from 'react-icons/io';
 
+import { useAuthContext } from '@contexts/AuthProvider';
+
 const ProfileForm = ({
     user,
     isDark,
@@ -13,9 +15,9 @@ const ProfileForm = ({
     handleRolesModal,
     isLoading = false
 }) => {
+    const { user: authUser } = useAuthContext();
     const [enableButton, setEnableButton] = useState(false);
     const [formData, setFormData] = useState({
-        id: user.id || '',
         name: user.name || '',
         email: user.email || '',
         roles: user.roles || []
@@ -31,9 +33,13 @@ const ProfileForm = ({
         }));
     }
     
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(formData);
+        const success = await onSubmit(formData);
+        if (success) {
+            formRef.current = formData;
+            setEnableButton(false);
+        }
     }
 
     useEffect(() => {
@@ -43,7 +49,6 @@ const ProfileForm = ({
 
     useEffect(() => {
         const newData = {
-            id: user.id || '',
             name: user.name || '',
             email: user.email || '',
             roles: user.roles || []
@@ -66,7 +71,7 @@ const ProfileForm = ({
                 <UserAvatar
                     user={user}
                     isDark={isDark}
-                    {...(formData.id === user.id ? { onClick: handleAvatarModal } : {})}
+                    {...(user.id === authUser.id ? { onClick: handleAvatarModal } : {})}
                     isLoading={isLoading}
                 />
             </div>
@@ -105,7 +110,7 @@ const ProfileForm = ({
                     className={`px-4 py-2 mb-3 rounded-lg font-bold transition-all duration-300
                         ${!enableButton || isLoading ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
                             : isDark ? 'bg-blue-500 hover:bg-blue-600'
-                            : 'bg-blue-600 hover:bg-blue-700'
+                            : 'bg-blue-400 hover:bg-blue-500'
                         }
                     `}
                     disabled={!enableButton || isLoading}

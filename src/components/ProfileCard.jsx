@@ -2,7 +2,7 @@ import React from 'react'
 import UserAvatar from './UserAvatar'
 import { MdOutlineWbSunny } from 'react-icons/md'
 import { FaMoon, FaPen } from 'react-icons/fa'
-import { IoLogOut } from 'react-icons/io5';
+import { IoLogOut, IoClose } from 'react-icons/io5';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -28,7 +28,7 @@ const ProfileCard = ({
                         className="fixed inset-0 z-50"
                     >
                         <div 
-                            className="absolute inset-0 bg-black/20  animate-fadeIn"
+                            className="absolute inset-0 bg-black/20 animate-fadeIn"
                             onClick={handleFocusOut}
                         />
 
@@ -36,11 +36,22 @@ const ProfileCard = ({
                             className={`absolute top-16 flex items-center gap-2 border-2 m-1
                                 ${isDark ? 'bg-gray-800 text-white border-gray-700' : 'bg-gray-200 text-gray-800 border-gray-400'}
                                 p-4 rounded-lg
-                            `}
+                                `}
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.8 }}
                         >
+                            <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={handleFocusOut}
+                                className={`
+                                    absolute top-1 left-1 p-1 rounded-full shadow-md transition-colors
+                                    ${isDark ? 'bg-red-700 hover:bg-gray-600' : 'bg-red-400 hover:bg-gray-500'}
+                                `}
+                            >
+                                <IoClose className="text-xl" />
+                            </motion.button>
                             <div className='flex justify-center items-center'>
                                 <UserAvatar
                                     user={user}
@@ -82,7 +93,7 @@ const ProfileCard = ({
                                     <>
                                         <button
                                             className={`flex gap-2 p-2 rounded-lg transition-all duration-300
-                                                ${isDark ? 'bg-green-700 text-white' : 'bg-green-300 text-gray-900 hover:bg-green-400'} 
+                                                ${isDark ? 'bg-green-700 text-white' : 'bg-green-400 text-gray-900'} 
                                                 hover:scale-95 shadow-lg hover:shadow-xl cursor-pointer
                                             `}
                                             title='Editar perfil'
@@ -98,7 +109,7 @@ const ProfileCard = ({
                                 <button
                                     onClick={logout}
                                     className={`flex gap-2 p-2 rounded-lg transition-all duration-300
-                                        ${isDark ? 'bg-red-700 text-white' : 'bg-red-300 text-gray-900 hover:bg-red-400'} 
+                                        ${isDark ? 'bg-red-700 text-white' : 'bg-red-400 text-gray-900'} 
                                         hover:scale-95 shadow-lg hover:shadow-xl cursor-pointer
                                     `}
                                     title="Cerrar sesión"

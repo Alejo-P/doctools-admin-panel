@@ -15,6 +15,7 @@ import SideBarItem from './SideBarItem';
 import UserAvatar from './UserAvatar';
 import Logo from '../assets/react.svg';
 import ProfileCard from './ProfileCard';
+import EditProfileModal from '@modals/EditProfileModal';
 
 const SideBar = ({
     isDark,
@@ -24,6 +25,7 @@ const SideBar = ({
     isMobile = false,
 }) => {
     const [showProfileCard, setShowProfileCard] = useState(false);
+    const [showEditProfileModal, setShowEditProfileModal] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -48,7 +50,8 @@ const SideBar = ({
     }
 
     const handleEditProfile = () => {
-        // Logic to edit profile
+        setShowProfileCard(false);
+        setShowEditProfileModal(!showEditProfileModal);
     }
 
     return (
@@ -160,6 +163,16 @@ const SideBar = ({
                         handleChangeTheme={handleTheme}
                         showCard={showProfileCard}
                         isMobile={isMobile}
+                    />
+                )
+            }
+            {
+                showEditProfileModal && (
+                    <EditProfileModal
+                        user={user}
+                        isOpen={showEditProfileModal}
+                        onClose={handleEditProfile}
+                        isDark={isDark}
                     />
                 )
             }

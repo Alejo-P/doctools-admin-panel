@@ -2,19 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { LuMousePointerClick } from "react-icons/lu";
 
 import { useAdminContext } from '@contexts/AdminProvider';
-import { useAuthContext } from '@contexts/AuthProvider';
 import { useAppContext } from '@contexts/AppProvider';
 import UserCard from '@components/UserCard';
 import ProfileForm from '@components/ProfileForm';
-import PasswordForm from '@components/PasswordForm';
+import EditUserModal from '@modals/EditUserModal';
 import LoadingCard from '@components/LoadingCard';
 
 const UsersManagerPage = () => {
     const { isDark, isMobile } = useAppContext();
-    const { user } = useAuthContext();
-    const { getAllUsers, usersList, loading } = useAdminContext();
+    const { getAllUsers, usersList, loading, updateUser } = useAdminContext();
     const [showCreateUserModal, setShowCreateUserModal] = useState(false);
-    const [showActionModal, setShowActionModal] = useState(false);
+    const [showUserProfileModal, setShowUserProfileModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     const handleFetchUsers = async () => {
@@ -26,11 +24,21 @@ const UsersManagerPage = () => {
     const handleSelectUser = (user) => {
         if (user.id === selectedUser?.id) {
             setSelectedUser(null);
-            setShowActionModal(false);
+            setShowUserProfileModal(false);
         } else {
             setSelectedUser(user);
-            setShowActionModal(true);
+            setShowUserProfileModal(true);
         }
+    }
+
+    const handleCloseEditModal = () => {
+        setShowUserProfileModal(false);
+        setSelectedUser(null);
+    }
+
+    const handleUpdateUser = async (userData) => {
+        const success = await updateUser(selectedUser.id, userData);
+        return success;
     }
 
     useEffect(() => {
@@ -38,6 +46,7 @@ const UsersManagerPage = () => {
             handleFetchUsers();
         }
     }, []);
+
     return (
         <>
             {loading ? <LoadingCard /> : (
@@ -63,8 +72,8 @@ const UsersManagerPage = () => {
                             <div className='flex overflow-y-auto pl-2 scrollbar flex-col gap-2 w-full h-full'>
                                 {
                                     !selectedUser ? (
-                                        <div className={`flex flex-col items-center justify-center h-full gap-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-white'} p-4`}>
-                                            <div className={`flex items-center justify-center p-4 rounded-lg
+                                        <div className={`flex flex-col items-center justify-center h-full gap-4 rounded-lg transition-all duration-300 ease-in-out ${isDark ? 'bg-gray-900' : 'bg-white'} p-4`}>
+                                            <div className={`flex items-center justify-center p-4 rounded-lg transition-all duration-300 ease-in-out
                                                 ${isDark ? 'bg-gray-800' : 'bg-gray-300'}
                                             `}>
                                                 <LuMousePointerClick className='text-2xl' />
@@ -76,24 +85,26 @@ const UsersManagerPage = () => {
                                             <ProfileForm
                                                 user={selectedUser}
                                                 isDark={isDark}
-                                                onSubmit={handleFetchUsers}
+                                                onSubmit={handleUpdateUser}
                                                 handleAvatarModal={() => { }}
                                                 handleRolesModal={() => { }}
                                                 isLoading={loading}
                                             />
-                                            {
-                                                selectedUser.id === user.id && (
-                                                    <PasswordForm
-                                                        isDark={isDark}
-                                                        onSubmit={handleFetchUsers}
-                                                        isLoading={loading}
-                                                    />
-                                                )
-                                            }
                                         </>
                                     )
                                 }
                             </div>
+                        )
+                    }
+                    {
+                        (isMobile && showUserProfileModal) && (
+                            <EditUserModal
+                                user={selectedUser}
+                                isOpen={showUserProfileModal}
+                                onClose={handleCloseEditModal}
+                                isDark={isDark}
+                                handleUpdate={handleUpdateUser}
+                            />
                         )
                     }
                 </div>
