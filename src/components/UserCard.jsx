@@ -1,13 +1,8 @@
 // @ts-check
-import React, { useState } from 'react'
-import UserAvatar from './UserAvatar'
-import { FaPen } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
-import { IoLogOut } from "react-icons/io5";
+import React from 'react'
+import UserAvatar from './UserAvatar';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
-import { useAuthContext } from '@contexts/AuthProvider'
 import clsx from 'clsx';
-
 
 const UserCard = ({
     isDark,
@@ -16,9 +11,6 @@ const UserCard = ({
     isSelected = false,
     onClick
 }) => {
-    const { user: authUser } = useAuthContext();
-    const isOwner = authUser?.id === user?.id;
-
     const baseClass = "flex flex-row border-b-2 gap-4 border-dashed p-1 cursor-pointer transition-all duration-300"
 
     const selectedClasses = clsx(
@@ -57,7 +49,7 @@ const UserCard = ({
                 ))}
                 {
                     isMobile && (
-                        <div className='flex flex-row w-full gap-2 items-center justify-center'>
+                        <div className='flex flex-row w-full gap-2 items-center justify-end'>
                             <p className={`text-sm font-semibold text-center flex flex-row items-center`}>
                                 <span
                                     className={`inline-block w-2 h-2 rounded-full mr-3 ${user.is_active ? 'bg-green-600' : 'bg-red-600'}`}
@@ -124,34 +116,6 @@ const UserCard = ({
                             place="top"
                             className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
                         />
-                        {
-                            (!isOwner && isMobile) && (
-                                <>
-                                    <button
-                                        className={`flex p-2 rounded-lg transition-all duration-300
-                                            ${isDark ? 'bg-green-700 text-white' : 'bg-green-300 text-gray-900 hover:bg-green-400'} 
-                                            hover:scale-95 shadow-lg hover:shadow-xl cursor-pointer
-                                        `}
-                                        data-tooltip-id='edit-user-tooltip'
-                                        data-tooltip-content={`Editar usuario ${user.name}`}
-                                    >
-                                        <FaPen className='text-lg' />
-                                    </button>
-                                    <button
-                                        className={`flex gap-2 p-2 rounded-lg transition-all duration-300
-                                            ${isDark ? 'bg-red-700 text-white' : 'bg-red-300 text-gray-900 hover:bg-red-400'} 
-                                            hover:scale-95 shadow-lg hover:shadow-xl cursor-pointer
-                                        `}
-                                        data-tooltip-id='delete-user-tooltip'
-                                        data-tooltip-content={`Eliminar usuario ${user.name}`}
-                                    >
-                                        <MdDeleteForever className='text-lg' />
-                                    </button>
-                                    <ReactTooltip id='delete-user-tooltip' place='left' />
-                                    <ReactTooltip id='edit-user-tooltip' place='left' />
-                                </>
-                            )
-                        }
                     </div>
                 )
             }
