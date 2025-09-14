@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { act } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { Outlet } from 'react-router-dom'
 
 import { useAppContext } from '@contexts/AppProvider'
 import { useAuthContext } from '@contexts/AuthProvider'
 import SideBar from '@components/SideBar'
+import ActionsCard from '@components/ActionsCard'
 
 const Dashboard = () => {
-    const { isDark, handleThemeToggle, isMobile } = useAppContext();
+    const { isDark, handleThemeToggle, isMobile, actionItems, showActions } = useAppContext();
     const { user, logout } = useAuthContext();
 
     const handleLogout = async () => {
@@ -38,10 +39,14 @@ const Dashboard = () => {
             />
             <div className={`flex flex-1 p-2 transition-all duration-300 overflow-y-auto scrollbar
                 ${isDark ? 'text-white bg-gray-800' : 'text-gray-900 bg-gray-200'}
-                scrollbar-thumb-rounded-full
-                scrollbar-track-rounded-full
-                `}>
+                scrollbar-thumb-rounded-full scrollbar-track-rounded-full`}
+            >
                 <Outlet />
+                <ActionsCard
+                    isDark={isDark}
+                    actionItems={actionItems}
+                    showActions={showActions}
+                />
             </div>
         </div>
     )

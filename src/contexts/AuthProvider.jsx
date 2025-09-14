@@ -38,28 +38,6 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     };
 
-    const register = async (data) => {
-        setLoading(true);
-        // Enviar la solicitud de registro
-        const response = await request({
-            method: 'post',
-            url: '/register',
-            payload: data,
-            notify: {
-                success: true,
-                error: true
-            }
-        });
-
-        if (response) {
-            handleNotificacion('success', response.msg, 5000);
-        }
-        setLoading(false);
-
-        const success = response ? true : false;
-        return success;
-    }
-
     const logout = async () => {
         const response = await request({
             method: 'post',
@@ -195,7 +173,6 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         setUser,
         login,
-        register,
         verifyEmail,
         logout,
         profile,

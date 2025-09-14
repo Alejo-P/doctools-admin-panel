@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import clsx from 'clsx';
 
 const SideBarItem = ({ icon: Icon, label, to = '', isDark, onClick, isSelected, isMobile = false }) => {
-
+    const [isOpenTooltip, setIsOpenTooltip] = useState(false);
     const handleClick = () => {
         onClick(to);
     };
@@ -28,6 +28,8 @@ const SideBarItem = ({ icon: Icon, label, to = '', isDark, onClick, isSelected, 
                 data-tooltip-id={`sidebar-item-tooltip-${label}`}
                 data-tooltip-content={label}
                 onClick={handleClick}
+                onMouseEnter={() => setIsOpenTooltip(true)}
+                onMouseLeave={() => setIsOpenTooltip(false)}
                 layout
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
@@ -49,7 +51,9 @@ const SideBarItem = ({ icon: Icon, label, to = '', isDark, onClick, isSelected, 
                 <ReactTooltip
                     id={`sidebar-item-tooltip-${label}`}
                     place="bottom"
+                    variant={isDark ? "dark" : "light"}
                     delayShow={100}
+                    isOpen={isOpenTooltip}
                 />
             )}
         </>

@@ -33,7 +33,7 @@ const ProfileCard = ({
                         />
 
                         <motion.div
-                            className={`absolute top-16 flex items-center gap-2 border-2 m-1
+                            className={`absolute top-16 right-0 flex items-center gap-2 border-2 m-1
                                 ${isDark ? 'bg-gray-800 text-white border-gray-700' : 'bg-gray-200 text-gray-800 border-gray-400'}
                                 p-4 rounded-lg
                                 `}

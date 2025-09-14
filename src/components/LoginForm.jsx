@@ -1,11 +1,11 @@
 import React , { useState, useEffect } from 'react'
 import { IoLogIn } from "react-icons/io5";
 import CustomInput from './CustomInput';
-import { useAppContext } from '@contexts/AppProvider';
 
 const LoginForm = ({
     isDark,
-    handleLogin
+    handleLogin,
+    isLoading = false
 }) => {
     const [formData, setFormData] = useState({
         email: '',
@@ -57,13 +57,13 @@ const LoginForm = ({
                 ))}
                 <button
                     className={`mt-4 p-2 rounded-lg font-bold  transition-all duration-300
-                        ${disableButton ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white hover:scale-x-102'}
+                        ${(disableButton || isLoading) ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white hover:scale-x-102'}
                     `}
                     type="submit"
                     form='loginForm'
-                    disabled={disableButton}
+                    disabled={disableButton || isLoading}
                 >
-                    Iniciar sesión
+                    {isLoading ? 'Cargando...' : 'Iniciar sesión'}
                 </button>
             </form>
         </div>

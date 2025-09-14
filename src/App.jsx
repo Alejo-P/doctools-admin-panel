@@ -7,7 +7,8 @@ import { AdminProvider } from '@contexts/AdminProvider'
 
 import LoginPage from '@pages/LoginPage'
 import DashboardPage from '@pages/DashboardPage'
-import UsersManagerPage from '@pages/UsersManagerPage'
+import UsersPage from '@pages/UsersPage'
+import RolesPage from '@pages/RolesPage'
 import AvatarPage from '@pages/AvatarPage'
 import Auth from '@layouts/Auth'
 import PrivateRoute from '@routes/PrivateRoute'
@@ -29,8 +30,8 @@ function App() {
               <Route path='/dashboard' element={<PrivateRoute />} >
                 <Route element={<Dashboard />} >
                   <Route index element={<DashboardPage />} />
-                  <Route path='users' element={<UsersManagerPage />} />
-                  <Route path='roles' element={<span>Roles</span>} />
+                  <Route path='users' element={<UsersPage />} />
+                  <Route path='roles' element={<RolesPage />} />
                   <Route path='avatars' element={<AvatarPage />} />
                   <Route path='stats' element={<span>Estadísticas</span>} />
                   <Route path='*' element={<span>404 Not Found</span>} />

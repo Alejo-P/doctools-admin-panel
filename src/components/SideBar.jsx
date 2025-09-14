@@ -22,7 +22,7 @@ const SideBar = ({
     user,
     changeTheme,
     logout,
-    isMobile = false,
+    isMobile = false
 }) => {
     const [showProfileCard, setShowProfileCard] = useState(false);
     const [showEditProfileModal, setShowEditProfileModal] = useState(false);
@@ -153,7 +153,7 @@ const SideBar = ({
                 </div>
             </div>
             {
-                showProfileCard && (
+                (showProfileCard && isMobile) && (
                     <ProfileCard
                         user={user}
                         isDark={isDark}

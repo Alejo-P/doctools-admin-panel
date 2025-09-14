@@ -1,5 +1,6 @@
 // Este hook personalizado se encarga de realizar peticiones HTTP utilizando axios y maneja la notificación de errores y éxitos a través del contexto de la aplicación.
 import axiosInstance from '@api/axiosInstance';
+import { ENV } from '@constants/vars';
 import { useAppContext } from '@contexts/AppProvider';
 
 export const useAxios = () => {
@@ -23,14 +24,14 @@ export const useAxios = () => {
                 ...config
             });
 
-            console.log('useAxios.jsx: response', response); // Log the response data
+            import.meta.env.VITE_ENV === ENV.DEV && console.log('useAxios.jsx: response', response); // Log the response data
 
             if (notify.success) {
                 handleNotificacion('success', response.data.msg, 4000);
             }
             return response.data; // Devuelve la respuesta de la API
         } catch (err) {
-            console.error(err);
+            import.meta.env.VITE_ENV === ENV.DEV && console.error(err);
             const type = err?.code === 'ECONNABORTED' ? 'info' : 'error';
             const message =
                 err.code === 'ECONNABORTED'

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { LuMousePointerClick } from "react-icons/lu";
+import { MdOutlineRefresh } from "react-icons/md";
+import { IoPersonAdd } from "react-icons/io5";
 
 import { useAdminContext } from '@contexts/AdminProvider';
 import { useAppContext } from '@contexts/AppProvider';
@@ -9,17 +11,19 @@ import EditUserModal from '@modals/EditUserModal';
 import UserAccountActions from '@components/UserAccountActions';
 import LoadingCard from '@components/LoadingCard';
 
-const UsersManagerPage = () => {
-    const { isDark, isMobile } = useAppContext();
-    const { getAllUsers, usersList, loading, updateUser } = useAdminContext();
+const UsersPage = () => {
+    const { isDark, isMobile, setShowActions, setActionItems } = useAppContext();
+    const { getAllUsers, usersList, loading, updateUser, registerUser } = useAdminContext();
     const [showCreateUserModal, setShowCreateUserModal] = useState(false);
     const [showUserProfileModal, setShowUserProfileModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     const handleFetchUsers = async () => {
+        setShowActions(false);
         setSelectedUser(null);
         setShowCreateUserModal(false);
         await getAllUsers();
+        setShowActions(true);
     }
 
     const handleDisableProfile = async () => {
@@ -54,10 +58,58 @@ const UsersManagerPage = () => {
         return success;
     }
 
+    const handleCreateUser = async (userData) => {
+        const success = await registerUser(userData);
+    }
+    
+    useEffect(() => {
+        const actions = [
+            {
+                key: 'Crear usuario',
+                element: (
+                    <button
+                    onClick={() => setShowCreateUserModal(true)}
+                    className={`p-2 rounded-lg transition-all duration-300
+                        ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                        hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Crear usuario"
+                        data-tooltip-id="addUserLabel"
+                        data-tooltip-content="Crear nuevo usuario"
+                        >
+                        <span className="text-3xl">
+                            <IoPersonAdd className='text-2xl'/>
+                        </span>
+                    </button>
+                )
+            },
+            {
+                key: 'Refrescar',
+                element: (
+                    <button
+                    onClick={() => handleFetchUsers()}
+                    className={`p-2 rounded-lg transition-all duration-300
+                        ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                        hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Refrescar lista de usuarios"
+                        data-tooltip-id="refreshLabel"
+                        data-tooltip-content="Refrescar lista de usuarios"
+                        >
+                        <span className="text-3xl">
+                            <MdOutlineRefresh className='text-2xl'/>
+                        </span>
+                    </button>
+                )
+            }
+        ]
+        setActionItems(actions);
+        return () => setActionItems([]);
+    }, [isDark, usersList]);
+    
     useEffect(() => {
         if (!usersList.length) {
             handleFetchUsers();
         }
+        setShowActions(true);
     }, []);
 
     return (
@@ -133,4 +185,4 @@ const UsersManagerPage = () => {
     )
 }
 
-export default UsersManagerPage
+export default UsersPage

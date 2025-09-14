@@ -9,48 +9,60 @@ const UserAccountActions = ({
     onSendVerifyEmail,
     isDark
 }) => {
-    return (
-        <div className={`flex flex-col md:grid md:grid-cols-2 gap-2 p-4 rounded-lg shadow-md
-            ${isDark ? 'bg-gray-900' : 'bg-white'} border-2 ${isDark ? 'border-gray-700' : 'border-gray-300'}
-            `}>
-            {
-                user.is_active ? (
-                    <button
-                        className={`flex items-center justify-evenly px-4 py-2 rounded-lg font-bold transition-all duration-300
-                            ${isDark ? 'bg-red-500 hover:bg-red-600' : 'bg-red-400 hover:bg-red-500'}
-                        `}
-                        onClick={onDisableProfile}
-                    >
-                        <FaUserMinus className='text-2xl'/>
-                        Desactivar cuenta
-                    </button>
-                ) : (
-                    <button
-                        className={`flex items-center justify-evenly px-4 py-2 rounded-lg font-bold transition-all duration-300
-                            ${isDark ? 'bg-green-500 hover:bg-green-600' : 'bg-green-400 hover:bg-green-500'}
-                        `}
-                        onClick={onEnableProfile}
-                    >
-                        <FaUserCheck className='text-2xl'/>
-                        Activar cuenta
-                    </button>
-                )
-            }
-            {
-                !user.is_verified && (
-                    <button
-                        className={`flex items-center justify-evenly px-4 py-2 rounded-lg font-bold transition-all duration-300
-                            ${isDark ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-400 hover:bg-blue-500'}
-                        `}
-                        onClick={onSendVerifyEmail}
-                    >
-                        <IoIosSend className='text-2xl'/>
-                        Enviar correo de verificación
-                    </button>
-                )
-            }
-        </div>
-    )
-}
+    const actions = [];
 
-export default UserAccountActions
+    if (user.is_active) {
+        actions.push(
+            <button
+                key="disable"
+                className={`flex items-center justify-evenly px-4 py-2 truncate rounded-lg font-bold transition-all duration-300 max-w-sm ${isDark ? 'bg-red-500 hover:bg-red-600' : 'bg-red-400 hover:bg-red-500'}
+                `}
+                onClick={onDisableProfile}
+            >
+                <FaUserMinus className="text-2xl mr-2" />
+                Desactivar cuenta
+            </button>
+        );
+    } else {
+        actions.push(
+            <button
+                key="enable"
+                className={`flex items-center justify-evenly px-4 py-2 truncate rounded-lg font-bold transition-all duration-300 max-w-sm ${isDark ? 'bg-green-500 hover:bg-green-600' : 'bg-green-400 hover:bg-green-500'}
+                `}
+                onClick={onEnableProfile}
+            >
+                <FaUserCheck className="text-2xl mr-2" />
+                Activar cuenta
+            </button>
+        );
+    }
+
+    if (!user.is_verified) {
+        actions.push(
+            <button
+                key="verify"
+                className={`flex items-center justify-evenly px-4 truncate py-2 rounded-lg font-bold transition-all duration-300 max-w-sm ${isDark ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-400 hover:bg-blue-500'}
+                `}
+                onClick={onSendVerifyEmail}
+            >
+                <IoIosSend className="text-2xl mr-2" />
+                Enviar correo de verificación
+            </button>
+        );
+    }
+
+    const containerClasses =
+        actions.length === 1
+            ? `flex justify-center p-4 rounded-lg shadow-md 
+                ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-300'} border-2`
+            : `grid grid-cols-1 sm:grid-cols-2 gap-2 p-4 rounded-lg shadow-md
+                ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-300'} border-2`;
+
+    return (
+        <div className={containerClasses}>
+            {actions}
+        </div>
+    );
+};
+
+export default UserAccountActions;

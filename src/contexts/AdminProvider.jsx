@@ -46,6 +46,26 @@ export const AdminProvider = ({ children }) => {
         return response;
     }
 
+    const registerUser = async (data) => {
+        // Enviar la solicitud de registro
+        const response = await request({
+            method: 'post',
+            url: '/register',
+            payload: data,
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+
+        if (response) {
+            setUsersList((prev) => [...prev, response]);
+        }
+
+        const success = response ? true : false;
+        return success;
+    }
+
     const enableUser = async (userId, reason) => {
         const response = await request({
             method: 'post',
@@ -280,6 +300,7 @@ export const AdminProvider = ({ children }) => {
         setUsersList,
         getAllUsers,
         getUserById,
+        registerUser,
         enableUser,
         disableUser,
         sendVerfyEmail,
