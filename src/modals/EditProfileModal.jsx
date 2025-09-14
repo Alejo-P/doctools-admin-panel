@@ -10,7 +10,8 @@ const EditProfileModal = ({
     isOpen,
     onClose,
     isDark,
-    handleRolesModal
+    handleRolesModal,
+    handleAvatarModal
 }) => {
     const { updateProfile, updatePassword } = useAuthContext();
     const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +40,7 @@ const EditProfileModal = ({
                 user={user}
                 isDark={isDark}
                 onSubmit={handleUpdateProfile}
-                handleAvatarModal={() => {}}
+                handleAvatarModal={handleAvatarModal}
                 handleRolesModal={handleRolesModal}
                 isLoading={isLoading}
             />

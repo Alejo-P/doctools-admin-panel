@@ -18,6 +18,7 @@ import Logo from '../assets/react.svg';
 import ProfileCard from './ProfileCard';
 import EditProfileModal from '@modals/EditProfileModal';
 import RoleActionModal from '@modals/RoleActionModal';
+import UploadAvatarModal from '@modals/UploadAvatarModal';
 
 const SideBar = ({
     isDark,
@@ -30,6 +31,7 @@ const SideBar = ({
     const [showProfileCard, setShowProfileCard] = useState(false);
     const [showEditProfileModal, setShowEditProfileModal] = useState(false);
     const [showRolesModal, setShowRolesModal] = useState(false);
+    const [showUploadAvatarModal, setShowUploadAvatarModal] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -44,6 +46,10 @@ const SideBar = ({
     const handleRolesModal = (newRoles) => {
         setShowRolesModal(!showRolesModal);
     }
+
+    const handleAvatarModal = () => {
+        setShowUploadAvatarModal(!showUploadAvatarModal);
+    };
 
     const handleTheme = () => {
         changeTheme(!isDark);
@@ -187,6 +193,7 @@ const SideBar = ({
                         isOpen={showEditProfileModal}
                         onClose={handleEditProfile}
                         handleRolesModal={handleRolesModal}
+                        handleAvatarModal={handleAvatarModal}
                         isDark={isDark}
                     />
                 )
@@ -198,6 +205,15 @@ const SideBar = ({
                         roleList={rolesList}
                         userInfo={user}
                         handleModal={handleRolesModal}
+                        isDark={isDark}
+                    />
+                )
+            }
+            {
+                showUploadAvatarModal && (
+                    <UploadAvatarModal
+                        isOpen={showUploadAvatarModal}
+                        onClose={handleAvatarModal}
                         isDark={isDark}
                     />
                 )
