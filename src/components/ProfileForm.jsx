@@ -66,7 +66,7 @@ const ProfileForm = ({
     }, [isLoading]);
 
     return (
-        <div className={`flex flex-col w-full gap-4 p-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-white'} border-2 ${isDark ? 'border-gray-700' : 'border-gray-300'}`}>
+        <div className={`flex flex-col w-full gap-4 p-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-white'} border-2 ${isDark ? 'border-gray-700' : 'border-gray-300'} transition-all duration-300 ease-in-out`}>
             <h2 className="text-2xl text-center font-bold">Editar perfil</h2>
             <div className="flex items-center justify-center">
                 {/* Avatar del usuario */}

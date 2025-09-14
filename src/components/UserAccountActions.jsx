@@ -4,8 +4,7 @@ import { IoIosSend } from "react-icons/io";
 
 const UserAccountActions = ({
     user,
-    onDisableProfile,
-    onEnableProfile,
+    handleActionModal,
     onSendVerifyEmail,
     isDark
 }) => {
@@ -17,7 +16,7 @@ const UserAccountActions = ({
                 key="disable"
                 className={`flex items-center justify-evenly px-4 py-2 truncate rounded-lg font-bold transition-all duration-300 max-w-sm ${isDark ? 'bg-red-500 hover:bg-red-600' : 'bg-red-400 hover:bg-red-500'}
                 `}
-                onClick={onDisableProfile}
+                onClick={handleActionModal}
             >
                 <FaUserMinus className="text-2xl mr-2" />
                 Desactivar cuenta
@@ -29,7 +28,7 @@ const UserAccountActions = ({
                 key="enable"
                 className={`flex items-center justify-evenly px-4 py-2 truncate rounded-lg font-bold transition-all duration-300 max-w-sm ${isDark ? 'bg-green-500 hover:bg-green-600' : 'bg-green-400 hover:bg-green-500'}
                 `}
-                onClick={onEnableProfile}
+                onClick={handleActionModal}
             >
                 <FaUserCheck className="text-2xl mr-2" />
                 Activar cuenta
@@ -53,9 +52,9 @@ const UserAccountActions = ({
 
     const containerClasses =
         actions.length === 1
-            ? `flex justify-center p-4 rounded-lg shadow-md 
+            ? `flex justify-center p-4 rounded-lg shadow-md transition-all duration-300 ease-in-out
                 ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-300'} border-2`
-            : `grid grid-cols-1 sm:grid-cols-2 gap-2 p-4 rounded-lg shadow-md
+            : `grid grid-cols-1 sm:grid-cols-2 gap-2 p-4 rounded-lg shadow-md transition-all duration-300 ease-in-out
                 ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-300'} border-2`;
 
     return (

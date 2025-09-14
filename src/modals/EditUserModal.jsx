@@ -10,21 +10,10 @@ const EditUserModal = ({
     onClose,
     isDark,
     handleUpdate,
-    handleRolesModal
+    handleRolesModal,
+    handleActionModal
 }) => {
     const [isLoading, setIsLoading] = useState(false);
-
-    const handleDisableProfile = async () => {
-        // Logic to disable user profile
-    }
-
-    const handleEnableProfile = async () => {
-        // Logic to enable user profile
-    }
-
-    const handleSendVerifyEmail = async () => {
-        // Logic to send verification email
-    }
 
     const handleSubmit = async (formData) => {
         setIsLoading(true);
@@ -46,9 +35,7 @@ const EditUserModal = ({
             />
             <UserAccountActions
                 user={user}
-                onDisableProfile={handleDisableProfile}
-                onEnableProfile={handleEnableProfile}
-                onSendVerifyEmail={handleSendVerifyEmail}
+                handleActionModal={handleActionModal}
                 isDark={isDark}
             />
         </Modal>

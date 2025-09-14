@@ -12,6 +12,7 @@ import UserAccountActions from '@components/UserAccountActions';
 import LoadingCard from '@components/LoadingCard';
 import RoleActionModal from '@modals/RoleActionModal';
 import CreateUserModal from '@modals/CreateUserModal';
+import ActionProfileModal from '@modals/ActionProfileModal';
 
 const UsersPage = () => {
     const { isDark, isMobile, setShowActions, setActionItems } = useAppContext();
@@ -20,7 +21,7 @@ const UsersPage = () => {
     const [showUserProfileModal, setShowUserProfileModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [showRolesModal, setShowRolesModal] = useState(false);
-
+    const [showActionModal, setShowActionModal] = useState(false);
 
     const handleFetchUsers = async () => {
         setShowActions(false);
@@ -41,6 +42,11 @@ const UsersPage = () => {
 
     const handleCreateUserModal = () => {
         setShowCreateUserModal(!showCreateUserModal);
+    }
+
+    const handleActionModal = async () => {
+        if (!selectedUser) return;
+        setShowActionModal(!showActionModal);
     }
 
     const handleDisableProfile = async () => {
@@ -144,54 +150,48 @@ const UsersPage = () => {
                             ))
                         }
                     </div>
-                    {
-                        !isMobile && (
-                            <div className='flex overflow-y-auto pl-2 scrollbar flex-col gap-2 w-full h-full'>
-                                {
-                                    !selectedUser ? (
-                                        <div className={`flex flex-col items-center justify-center h-full gap-4 rounded-lg transition-all duration-300 ease-in-out ${isDark ? 'bg-gray-900' : 'bg-white'} p-4`}>
-                                            <div className={`flex items-center justify-center p-4 rounded-lg transition-all duration-300 ease-in-out
-                                                ${isDark ? 'bg-gray-800' : 'bg-gray-300'}
-                                            `}>
-                                                <LuMousePointerClick className='text-2xl' />
-                                            </div>
-                                            <p>Selecciona un usuario para editar su perfil</p>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <ProfileForm
-                                                user={selectedUser}
-                                                isDark={isDark}
-                                                onSubmit={handleUpdateUser}
-                                                handleAvatarModal={() => { }}
-                                                handleRolesModal={handleRolesModal}
-                                                isLoading={loading}
-                                            />
-                                            <UserAccountActions
-                                                user={selectedUser}
-                                                onDisableProfile={handleDisableProfile}
-                                                onEnableProfile={handleEnableProfile}
-                                                onSendVerifyEmail={handleSendVerifyEmail}
-                                                isDark={isDark}
-                                            />
-                                        </>
-                                    )
-                                }
-                            </div>
-                        )
-                    }
-                    {
-                        (isMobile && showUserProfileModal) && (
-                            <EditUserModal
-                                user={selectedUser}
-                                isOpen={showUserProfileModal}
-                                onClose={handleCloseEditModal}
-                                isDark={isDark}
-                                handleUpdate={handleUpdateUser}
-                                handleRolesModal={handleRolesModal}
-                            />
-                        )
-                    }
+                    {!isMobile && (
+                        <div className='flex overflow-y-auto pl-2 scrollbar flex-col gap-2 w-full h-full'>
+                            {!selectedUser ? (
+                                <div className={`flex flex-col items-center justify-center h-full gap-4 rounded-lg transition-all duration-300 ease-in-out ${isDark ? 'bg-gray-900' : 'bg-white'} p-4`}>
+                                    <div className={`flex items-center justify-center p-4 rounded-lg transition-all duration-300 ease-in-out
+                                        ${isDark ? 'bg-gray-800' : 'bg-gray-300'}
+                                    `}>
+                                        <LuMousePointerClick className='text-2xl' />
+                                    </div>
+                                    <p>Selecciona un usuario para editar su perfil</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <ProfileForm
+                                        user={selectedUser}
+                                        isDark={isDark}
+                                        onSubmit={handleUpdateUser}
+                                        handleAvatarModal={() => { }}
+                                        handleRolesModal={handleRolesModal}
+                                        isLoading={loading}
+                                    />
+                                    <UserAccountActions
+                                        user={selectedUser}
+                                        handleActionModal={handleActionModal}
+                                        onSendVerifyEmail={handleSendVerifyEmail}
+                                        isDark={isDark}
+                                    />
+                                </>
+                            )}
+                        </div>
+                    )}
+                    {(isMobile && showUserProfileModal) && (
+                        <EditUserModal
+                            user={selectedUser}
+                            isOpen={showUserProfileModal}
+                            onClose={handleCloseEditModal}
+                            isDark={isDark}
+                            handleUpdate={handleUpdateUser}
+                            handleRolesModal={handleRolesModal}
+                            handleActionModal={handleActionModal}
+                        />
+                    )}
                     {showRolesModal && (
                         <RoleActionModal
                             isOpen={showRolesModal}
@@ -201,15 +201,23 @@ const UsersPage = () => {
                             roleList={rolesList}
                         />
                     )}
-                    {
-                        showCreateUserModal && (
-                            <CreateUserModal
-                                isOpen={showCreateUserModal}
-                                handleModal={handleCreateUserModal}
-                                isDark={isDark}
-                            />
-                        )
-                    }
+                    {showCreateUserModal && (
+                        <CreateUserModal
+                            isOpen={showCreateUserModal}
+                            handleModal={handleCreateUserModal}
+                            isDark={isDark}
+                        />
+                    )}
+                    {showActionModal && (
+                        <ActionProfileModal
+                            isOpen={showActionModal}
+                            handleModal={handleActionModal}
+                            setUserInfo={setSelectedUser}
+                            actionType={selectedUser?.is_active ? 'disable' : 'enable'}
+                            userInfo={selectedUser}
+                            isDark={isDark}
+                        />
+                    )}
                 </div>
             )}
         </>
