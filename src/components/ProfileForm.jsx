@@ -1,4 +1,3 @@
-// @ts-check
 import React, { useState, useEffect, useRef } from 'react'
 import UserAvatar from './UserAvatar';
 import CustomInput from './CustomInput';
@@ -23,6 +22,7 @@ const ProfileForm = ({
         email: user.email || '',
         roles: user.roles || []
     });
+    const [showRolesModal, setShowRolesModal] = useState(false);
 
     const formRef = useRef(formData);
 
@@ -101,7 +101,6 @@ const ProfileForm = ({
                                 isDark={isDark}
                                 userId={formData.id}
                                 values={formData.roles}
-                                isAdmin={true}
                                 onClick={() => handleRolesModal()}
                             />
                         );

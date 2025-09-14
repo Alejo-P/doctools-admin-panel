@@ -10,20 +10,32 @@ import ProfileForm from '@components/ProfileForm';
 import EditUserModal from '@modals/EditUserModal';
 import UserAccountActions from '@components/UserAccountActions';
 import LoadingCard from '@components/LoadingCard';
+import RoleActionModal from '@modals/RoleActionModal';
 
 const UsersPage = () => {
     const { isDark, isMobile, setShowActions, setActionItems } = useAppContext();
-    const { getAllUsers, usersList, loading, updateUser, registerUser } = useAdminContext();
+    const { getAllUsers, usersList, loading, updateUser, registerUser, disableUser, getRolesList, rolesList } = useAdminContext();
     const [showCreateUserModal, setShowCreateUserModal] = useState(false);
     const [showUserProfileModal, setShowUserProfileModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [showRolesModal, setShowRolesModal] = useState(false);
+
 
     const handleFetchUsers = async () => {
         setShowActions(false);
         setSelectedUser(null);
         setShowCreateUserModal(false);
         await getAllUsers();
+        await getRolesList();
         setShowActions(true);
+    }
+
+    const handleRolesModal = (newRoles) => {
+        setShowRolesModal(!showRolesModal);
+        // Actualiza la lista de roles en la vista (si el usuario es distinto al autenticado)
+        if (Array.isArray(newRoles)) {
+            setSelectedUser({ ...selectedUser, roles: newRoles });
+        }
     }
 
     const handleDisableProfile = async () => {
@@ -152,7 +164,7 @@ const UsersPage = () => {
                                                 isDark={isDark}
                                                 onSubmit={handleUpdateUser}
                                                 handleAvatarModal={() => { }}
-                                                handleRolesModal={() => { }}
+                                                handleRolesModal={handleRolesModal}
                                                 isLoading={loading}
                                             />
                                             <UserAccountActions
@@ -176,9 +188,19 @@ const UsersPage = () => {
                                 onClose={handleCloseEditModal}
                                 isDark={isDark}
                                 handleUpdate={handleUpdateUser}
+                                handleRolesModal={handleRolesModal}
                             />
                         )
                     }
+                    {showRolesModal && (
+                        <RoleActionModal
+                            isOpen={showRolesModal}
+                            handleModal={handleRolesModal}
+                            userInfo={selectedUser}
+                            isDark={isDark}
+                            roleList={rolesList}
+                        />
+                    )}
                 </div>
             )}
         </>

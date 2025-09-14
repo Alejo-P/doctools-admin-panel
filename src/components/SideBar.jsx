@@ -1,5 +1,5 @@
 // @ts-check
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { FaMoon } from "react-icons/fa";
@@ -11,11 +11,13 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { GoGraph } from "react-icons/go";
 import { IoLogOut } from 'react-icons/io5';
 
+import { useAdminContext } from '@contexts/AdminProvider';
 import SideBarItem from './SideBarItem';
 import UserAvatar from './UserAvatar';
 import Logo from '../assets/react.svg';
 import ProfileCard from './ProfileCard';
 import EditProfileModal from '@modals/EditProfileModal';
+import RoleActionModal from '@modals/RoleActionModal';
 
 const SideBar = ({
     isDark,
@@ -24,8 +26,10 @@ const SideBar = ({
     logout,
     isMobile = false
 }) => {
+    const { getRolesList, rolesList } = useAdminContext();
     const [showProfileCard, setShowProfileCard] = useState(false);
     const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+    const [showRolesModal, setShowRolesModal] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -36,6 +40,10 @@ const SideBar = ({
         { icon: BiSolidUserAccount, label: 'Avatares', to: '/dashboard/avatars' },
         { icon: GoGraph, label: 'Estadísticas', to: '/dashboard/stats' },
     ];
+
+    const handleRolesModal = (newRoles) => {
+        setShowRolesModal(!showRolesModal);
+    }
 
     const handleTheme = () => {
         changeTheme(!isDark);
@@ -53,6 +61,12 @@ const SideBar = ({
         setShowProfileCard(false);
         setShowEditProfileModal(!showEditProfileModal);
     }
+
+    useEffect(() => {
+        if (rolesList.length === 0) {
+            getRolesList();
+        }
+    }, []);
 
     return (
         <div
@@ -172,6 +186,18 @@ const SideBar = ({
                         user={user}
                         isOpen={showEditProfileModal}
                         onClose={handleEditProfile}
+                        handleRolesModal={handleRolesModal}
+                        isDark={isDark}
+                    />
+                )
+            }
+            {
+                showRolesModal && (
+                    <RoleActionModal
+                        isOpen={showRolesModal}
+                        roleList={rolesList}
+                        userInfo={user}
+                        handleModal={handleRolesModal}
                         isDark={isDark}
                     />
                 )

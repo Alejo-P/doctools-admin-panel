@@ -10,15 +10,14 @@ const RolesField = ({
     values = [],
     onClick,
     onAddEachRole,
-    onDeleteEachRole,
-    isAdmin = false
+    onDeleteEachRole
 }) => {
     const roles = [...values];
 
     // Función para manejar el clic en el botón de eliminar rol
     // Se asegura de que el usuario tenga permisos para eliminar el rol
     const handleDeleteRole = (role) => {
-        if (isAdmin && roles.length > 1 && onDeleteEachRole) {
+        if (roles.length > 1 && onDeleteEachRole) {
             // Llama a la función onDeleteRole si está definida y el usuario tiene permisos
             userId && onDeleteEachRole(role, userId);
         }
@@ -27,7 +26,7 @@ const RolesField = ({
     // Función para manejar el clic en el botón de añadir rol
     // Se asegura de que el usuario tenga permisos para añadir el rol
     const handleAddRole = (role) => {
-        if (isAdmin && roles.length && onAddEachRole) {
+        if (roles.length && onAddEachRole) {
             // Llama a la función onAddRole si está definida y el usuario tiene permisos
             userId && onAddEachRole(role, userId);
         }
@@ -35,7 +34,7 @@ const RolesField = ({
 
     // Función para manejar el clic en el botón de añadir rol
     const handleClick = () => {
-        if (isAdmin && roles.length >= 1 && onClick) {
+        if (roles.length >= 1 && onClick) {
             // Llama a la función onClick si está definida y el usuario tiene permisos (acciona el modal)
             onClick();
         }
@@ -75,7 +74,7 @@ const RolesField = ({
                                     {role}
                                 </span>
 
-                                {(isAdmin && roles.length > 1 && onDeleteEachRole) && (
+                                {(roles.length > 1 && onDeleteEachRole) && (
                                     <motion.div
                                         className={`ml-2 transform cursor-pointer transition-all duration-300 bg-transparent rounded-full
                                             ${isDark ? 'text-white hover:text-red-400' : 'text-gray-900 hover:text-red-500'}`}
@@ -88,7 +87,7 @@ const RolesField = ({
                                         <IoMdCloseCircle className="text-xl" />
                                     </motion.div>
                                 )}
-                                {(isAdmin && roles.length && onAddEachRole) && (
+                                {(roles.length && onAddEachRole) && (
                                     <motion.div
                                         className={`ml-2 rounded-full transform cursor-pointer transition-all duration-300 bg-transparent
                                             ${isDark ? 'text-white hover:text-blue-400' : 'text-gray-900 hover:text-blue-500'}`}
@@ -109,7 +108,7 @@ const RolesField = ({
                 </div>
 
                 {/* Botón para añadir rol */}
-                {(isAdmin && roles.length >= 1 && onClick) && (
+                {(roles.length >= 1 && onClick) && (
                     <motion.div
                         className={`absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer transition-all duration-300 bg-transparent ${isDark ? 'text-white border-gray-700' : 'text-gray-900 border-gray-300'}`}
                         onClick={() => handleClick()} // Acciona el modal
