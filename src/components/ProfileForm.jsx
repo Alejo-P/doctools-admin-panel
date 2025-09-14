@@ -78,9 +78,9 @@ const ProfileForm = ({
                 />
             </div>
             <form className="flex flex-col gap-4" onSubmit={handleSubmit} autoComplete='off'>
-                {[{ placeholder: "Tu nombre de usuario", name: "name", disabled: false, type: "username" },
-                { placeholder: "Tu correo electronico", name: "email", disabled: false, type: "email" },
-                { placeholder: "Tus roles", name: "roles", disabled: true, type: "security" }].map((field) => {
+                {[{ placeholder: `${user.id !== authUser.id ? '' : 'Tu'} nombre de usuario`.trim(), name: "name", disabled: false, type: "username" },
+                { placeholder: `${user.id !== authUser.id ? '' : 'Tu'} correo electrónico`.trim(), name: "email", disabled: false, type: "email" },
+                { placeholder: `${user.id !== authUser.id ? '' : 'Tus'} roles`.trim(), name: "roles", disabled: true, type: "security" }].map((field) => {
                     if (field.name !== "roles") {
                         return (
                             <CustomInput

@@ -31,8 +31,11 @@ const CustomInput = ({
 
     return (
         <div className="flex flex-col">
-            <label htmlFor={Iname} className="font-bold title flex justify-between items-center">
-                {Ilabel ? Ilabel : Iplaceholder}:
+            <label htmlFor={Iname} className="font-bold title flex justify-between items-center mb-1">
+                {Ilabel
+                    ? Ilabel.charAt(0).toUpperCase() + Ilabel.slice(1).toLowerCase()
+                    : Iplaceholder.charAt(0).toUpperCase() + Iplaceholder.slice(1).toLowerCase()
+                }:
                 {Irequired && <span className="text-red-500 text-sm uppercase">(Requerido)</span>}
             </label>
             <div className="flex flex-col relative">

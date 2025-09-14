@@ -45,8 +45,8 @@ const RolesField = ({
             {/* Etiqueta del campo */}
             {
                 field?.placeholder && (
-                    <label htmlFor={field.name} className="font-bold title flex justify-between items-center">
-                        {field.placeholder}:
+                    <label htmlFor={field.name} className="font-bold title flex justify-between items-center mb-1">
+                        {field.placeholder.charAt(0).toUpperCase() + field.placeholder.slice(1).toLowerCase()}:
                     </label>
                 )
             }
