@@ -11,10 +11,11 @@ import EditUserModal from '@modals/EditUserModal';
 import UserAccountActions from '@components/UserAccountActions';
 import LoadingCard from '@components/LoadingCard';
 import RoleActionModal from '@modals/RoleActionModal';
+import CreateUserModal from '@modals/CreateUserModal';
 
 const UsersPage = () => {
     const { isDark, isMobile, setShowActions, setActionItems } = useAppContext();
-    const { getAllUsers, usersList, loading, updateUser, registerUser, disableUser, getRolesList, rolesList } = useAdminContext();
+    const { getAllUsers, usersList, loading, updateUser, disableUser, getRolesList, rolesList } = useAdminContext();
     const [showCreateUserModal, setShowCreateUserModal] = useState(false);
     const [showUserProfileModal, setShowUserProfileModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -36,6 +37,10 @@ const UsersPage = () => {
         if (Array.isArray(newRoles)) {
             setSelectedUser({ ...selectedUser, roles: newRoles });
         }
+    }
+
+    const handleCreateUserModal = () => {
+        setShowCreateUserModal(!showCreateUserModal);
     }
 
     const handleDisableProfile = async () => {
@@ -69,10 +74,6 @@ const UsersPage = () => {
         const success = await updateUser(selectedUser.id, userData);
         return success;
     }
-
-    const handleCreateUser = async (userData) => {
-        const success = await registerUser(userData);
-    }
     
     useEffect(() => {
         const actions = [
@@ -80,7 +81,7 @@ const UsersPage = () => {
                 key: 'Crear usuario',
                 element: (
                     <button
-                    onClick={() => setShowCreateUserModal(true)}
+                    onClick={handleCreateUserModal}
                     className={`p-2 rounded-lg transition-all duration-300
                         ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
                         hover:scale-95 shadow-lg hover:shadow-xl`}
@@ -121,7 +122,6 @@ const UsersPage = () => {
         if (!usersList.length) {
             handleFetchUsers();
         }
-        setShowActions(true);
     }, []);
 
     return (
@@ -201,6 +201,15 @@ const UsersPage = () => {
                             roleList={rolesList}
                         />
                     )}
+                    {
+                        showCreateUserModal && (
+                            <CreateUserModal
+                                isOpen={showCreateUserModal}
+                                handleModal={handleCreateUserModal}
+                                isDark={isDark}
+                            />
+                        )
+                    }
                 </div>
             )}
         </>

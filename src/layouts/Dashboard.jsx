@@ -29,13 +29,10 @@ const Dashboard = () => {
             <ToastContainer
                 newestOnTop
                 limit={3}
-                position="bottom-right"
                 autoClose={4000}
                 closeOnClick
                 pauseOnHover
                 draggable
-                progress={undefined}
-                theme={isDark ? "dark" : "light"}
             />
             <div className={`flex flex-1 p-2 transition-all duration-300 overflow-y-auto scrollbar
                 ${isDark ? 'text-white bg-gray-800' : 'text-gray-900 bg-gray-200'}

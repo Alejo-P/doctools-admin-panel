@@ -1,4 +1,3 @@
-// @ts-check
 import React, { useState, useRef } from 'react'
 import { FaUpload } from "react-icons/fa6";
 import { ImSpinner9 } from "react-icons/im";
