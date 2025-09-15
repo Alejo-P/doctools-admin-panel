@@ -17,47 +17,47 @@ const AvatarPage = () => {
     }
 
     useEffect(() => {
-            const actions = [
-                {
-                    key: 'Cargar Avatar',
-                    element: (
-                        <button
-                        onClick={() => setShowCreateUserModal(true)}
-                        className={`p-2 rounded-lg transition-all duration-300
-                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                            hover:scale-95 shadow-lg hover:shadow-xl`}
-                            title="Cargar Avatar"
-                            data-tooltip-id="addAvatarLabel"
-                            data-tooltip-content="Cargar nuevo avatar"
-                            >
-                            <span className="text-3xl">
-                                <MdAddPhotoAlternate className='text-2xl'/>
-                            </span>
-                        </button>
-                    )
-                },
-                {
-                    key: 'Refrescar',
-                    element: (
-                        <button
-                        onClick={() => handleFetchAvatars()}
-                        className={`p-2 rounded-lg transition-all duration-300
-                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                            hover:scale-95 shadow-lg hover:shadow-xl`}
-                            title="Refrescar lista de avatares"
-                            data-tooltip-id="refreshLabel"
-                            data-tooltip-content="Refrescar lista de avatares"
-                            >
-                            <span className="text-3xl">
-                                <MdOutlineRefresh className='text-2xl'/>
-                            </span>
-                        </button>
-                    )
-                }
-            ]
-            setActionItems(actions);
-            return () => setActionItems([]);
-        }, [isDark, avatarList]);
+        const actions = [
+            {
+                key: 'Cargar Avatar',
+                element: (
+                    <button
+                    onClick={() => setShowCreateUserModal(true)}
+                    className={`p-2 rounded-lg transition-all duration-300
+                        ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                        hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Cargar Avatar"
+                        data-tooltip-id="addAvatarLabel"
+                        data-tooltip-content="Cargar nuevo avatar"
+                        >
+                        <span className="text-3xl">
+                            <MdAddPhotoAlternate className='text-2xl'/>
+                        </span>
+                    </button>
+                )
+            },
+            {
+                key: 'Refrescar',
+                element: (
+                    <button
+                    onClick={() => handleFetchAvatars()}
+                    className={`p-2 rounded-lg transition-all duration-300
+                        ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                        hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Refrescar lista de avatares"
+                        data-tooltip-id="refreshLabel"
+                        data-tooltip-content="Refrescar lista de avatares"
+                        >
+                        <span className="text-3xl">
+                            <MdOutlineRefresh className='text-2xl'/>
+                        </span>
+                    </button>
+                )
+            }
+        ]
+        setActionItems(actions);
+        return () => setActionItems([]);
+    }, [isDark, avatarList]);
 
     useEffect(() => {
         if (!avatarList.length) {
@@ -81,7 +81,6 @@ const AvatarPage = () => {
                         ))
                     }
                 </div>
-
             )}
         </>
     )
