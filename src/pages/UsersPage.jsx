@@ -16,7 +16,7 @@ import ActionProfileModal from '@modals/ActionProfileModal';
 
 const UsersPage = () => {
     const { isDark, isMobile, setShowActions, setActionItems } = useAppContext();
-    const { getAllUsers, usersList, loading, updateUser, disableUser, getRolesList, rolesList } = useAdminContext();
+    const { getAllUsers, usersList, loading, updateUser, getRolesList, rolesList, sendVerifyEmail } = useAdminContext();
     const [showCreateUserModal, setShowCreateUserModal] = useState(false);
     const [showUserProfileModal, setShowUserProfileModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -49,16 +49,11 @@ const UsersPage = () => {
         setShowActionModal(!showActionModal);
     }
 
-    const handleDisableProfile = async () => {
-        // Logic to disable user profile
-    }
-
-    const handleEnableProfile = async () => {
-        // Logic to enable user profile
-    }
-
     const handleSendVerifyEmail = async () => {
-        // Logic to send verification email
+        if (!selectedUser) return;
+        const confirm = window.confirm("¿Estás seguro de que deseas enviar un correo de verificación?");
+        if (!confirm) return;
+        await sendVerifyEmail(selectedUser.id);
     }
 
     const handleSelectUser = (user) => {

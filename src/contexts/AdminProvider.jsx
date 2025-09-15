@@ -274,9 +274,8 @@ export const AdminProvider = ({ children }) => {
         setLoading(false);
     }
 
-    const sendVerfyEmail = (userId) => {
-        setLoading(true);
-        const response = request({
+    const sendVerifyEmail = async (userId) => {
+        await request({
             method: 'post',
             url: `/send-verification-email/${userId}`,
             notify: {
@@ -284,11 +283,6 @@ export const AdminProvider = ({ children }) => {
                 error: true
             }
         });
-
-        if (response) {
-            handleNotificacion('success', response.msg, 5000);
-        }
-        setLoading(false);
     }
 
     const contextValue = useMemo(() => ({
@@ -303,7 +297,7 @@ export const AdminProvider = ({ children }) => {
         registerUser,
         enableUser,
         disableUser,
-        sendVerfyEmail,
+        sendVerifyEmail,
         updateUser,
         updateUserPassword,
         setLoading,

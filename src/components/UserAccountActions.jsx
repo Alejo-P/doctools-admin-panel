@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FaUserCheck, FaUserMinus } from 'react-icons/fa'
+import { ImSpinner9 } from "react-icons/im";
 import { IoIosSend } from "react-icons/io";
 
 const UserAccountActions = ({
@@ -8,7 +9,14 @@ const UserAccountActions = ({
     onSendVerifyEmail,
     isDark
 }) => {
+    const [loading, setLoading] = useState(false);
     const actions = [];
+
+    const handleSendVerifyEmail = async () => {
+        setLoading(true);
+        await onSendVerifyEmail();
+        setLoading(false);
+    }
 
     if (user.is_active) {
         actions.push(
@@ -40,12 +48,27 @@ const UserAccountActions = ({
         actions.push(
             <button
                 key="verify"
-                className={`flex items-center justify-evenly px-4 truncate py-2 rounded-lg font-bold transition-all duration-300 max-w-sm ${isDark ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-400 hover:bg-blue-500'}
+                className={`flex items-center justify-evenly px-4 truncate py-2 rounded-lg font-bold transition-all duration-300 max-w-sm ${loading ? 'cursor-not-allowed bg-gray-300 text-gray-500'
+                    : isDark ? 'bg-blue-600 text-white'
+                    : 'bg-blue-400 text-gray-900 hover:bg-gray-400'}
                 `}
-                onClick={onSendVerifyEmail}
+                onClick={handleSendVerifyEmail}
+                disabled={loading}
+                title={loading ? "Enviando..." : "Enviar correo de verificación"}
             >
-                <IoIosSend className="text-2xl mr-2" />
-                Enviar correo de verificación
+                {loading 
+                    ? (
+                        <span className="flex items-center gap-2 font-bold">
+                            <span className="animate-spin"><ImSpinner9 className="text-2xl" /></span>
+                            Enviando...
+                        </span>
+                    ) : (
+                        <span className='flex items-center gap-2 font-bold'>
+                            <IoIosSend className="text-2xl" />
+                            Enviar correo de verificación
+                        </span>
+                    )
+                }
             </button>
         );
     }
