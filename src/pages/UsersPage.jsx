@@ -136,8 +136,14 @@ const UsersPage = () => {
     useEffect(() => {
         if (usersList.length && usersList.find(u => u.id === selectedUser?.id)) {
             setSelectedUser(usersList.find(u => u.id === selectedUser?.id));
+            setFilteredUsers((prev) => {
+                if (searchTerm.trim() === '') return usersList;
+                return prev.map(u => u.id === selectedUser.id ? usersList.find(nu => nu.id === selectedUser.id) : u);
+            });
         }
-        setFilteredUsers(usersList);
+        if (filteredUsers.length === 0 && searchTerm.trim() === '') {
+            setFilteredUsers(usersList);
+        }
     }, [usersList])
     
     useEffect(() => {
