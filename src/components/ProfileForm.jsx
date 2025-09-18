@@ -16,18 +16,26 @@ const ProfileForm = ({
 }) => {
     const { user: authUser } = useAuthContext();
     const [enableButton, setEnableButton] = useState(false);
+    const [emailMessage, setEmailMessage] = useState('');
     const [formData, setFormData] = useState({
         id: user.id || '',
         name: user.name || '',
         email: user.email || '',
         roles: user.roles || []
     });
-    const [showRolesModal, setShowRolesModal] = useState(false);
 
     const formRef = useRef(formData);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        if (name === 'email') {
+            setEmailMessage(value !== user.email
+                ? '*Al cambiar el correo electrónico, se enviará un correo de verificación.'
+                : ''
+            );
+        }
+
         setFormData(prev => ({
             ...prev,
             [name]: value
@@ -44,7 +52,14 @@ const ProfileForm = ({
     }
 
     useEffect(() => {
-        const isChanged = JSON.stringify(formRef.current) !== JSON.stringify(formData)
+        const valuesForm = {...formData};
+        Object.keys(valuesForm).forEach(key => {
+            if (typeof valuesForm[key] === 'string') {
+                valuesForm[key] = valuesForm[key].trim();
+            }
+        });
+
+        const isChanged = JSON.stringify(formRef.current) !== JSON.stringify(valuesForm);
         setEnableButton(isChanged);
     }, [formData]);
 
@@ -79,7 +94,7 @@ const ProfileForm = ({
             </div>
             <form className="flex flex-col gap-4" onSubmit={handleSubmit} autoComplete='off'>
                 {[{ placeholder: `${user.id !== authUser.id ? '' : 'Tu'} nombre de usuario`.trim(), name: "name", disabled: false, type: "username" },
-                { placeholder: `${user.id !== authUser.id ? '' : 'Tu'} correo electrónico`.trim(), name: "email", disabled: false, type: "email" },
+                { placeholder: `${user.id !== authUser.id ? '' : 'Tu'} correo electrónico`.trim(), name: "email", disabled: false, type: "email", message: emailMessage },
                 { placeholder: `${user.id !== authUser.id ? '' : 'Tus'} roles`.trim(), name: "roles", disabled: true, type: "security" }].map((field) => {
                     if (field.name !== "roles") {
                         return (
@@ -87,6 +102,7 @@ const ProfileForm = ({
                                 key={field.name}
                                 Itype={field.type}
                                 Iname={field.name}
+                                Imessage={field?.message || ''}
                                 Ivalue={formData[field.name]}
                                 IonChange={handleChange}
                                 Iplaceholder={field.placeholder}

@@ -15,7 +15,8 @@ axiosInstance.interceptors.response.use(
     async error => {
         const originalRequest = error.config;
 
-        if (error.response?.data?.detail === "Usuario inactivo"){
+        // Si el error es 401 y el detalle es "Usuario inactivo", cerrar sesión, o, si el detalle de la respuesta es "Token faltante", "Token inválido" o "Token expirado", y ya se ha intentado refrescar el token, cerrar sesión
+        if (error.response?.data?.detail === "Usuario inactivo" || (error.response?.status === 401 && originalRequest._retry)) {
             // Peticion POST para cerrar sesión
             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/logout`, {}, {
                 headers: {
@@ -24,13 +25,14 @@ axiosInstance.interceptors.response.use(
                 withCredentials: true,
             });
             localStorage.removeItem('isAuth');
+            localStorage.removeItem('user');
             window.location.href = '/';
-            import.meta.env.VITE_ENV === ENV.DEV && console.warn('Usuario inactivo, redirigiendo a la página de inicio');
             return Promise.reject(error);
         }
 
         // Si ya intentamos refrescar, no lo volvemos a hacer
-        if ((error.response?.data?.detail === "Token faltante" || error.response?.data?.detail === "Token inválido" || error.response?.data?.detail === "Token expirado") && !originalRequest._retry) {
+        if (
+            (error.response?.data?.detail === "Token faltante" || error.response?.data?.detail === "Token inválido" || error.response?.data?.detail === "Token expirado") && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
                 const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/refresh`, {}, {
@@ -46,16 +48,13 @@ axiosInstance.interceptors.response.use(
                 localStorage.removeItem('isAuth');
                 localStorage.removeItem('user');
                 window.location.href = '/';
-                import.meta.env.VITE_ENV === ENV.DEV && console.error('Error al refrescar el token', refreshError);
+                console.error('Error al refrescar el token', refreshError);
                 
                 return Promise.reject(refreshError);
             }
         }
 
-        if (error.code === 'ECONNABORTED') {
-            import.meta.env.VITE_ENV === ENV.DEV && console.warn('⏱️ La solicitud se canceló por timeout.');
-            // Acá también podés notificar visualmente
-        }
+        // Si la solicitud ya ha sido reintentada, rechazar la promesa
         return Promise.reject(error);
     }
 );

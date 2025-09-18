@@ -135,7 +135,7 @@ export const AdminProvider = ({ children }) => {
         if (response) {
             setUsersList((prev) => prev.map((user) => {
                 if (user.id === userId){
-                    return { ...user, ...data };
+                    return response.user;
                 }
                 return user;
             }));

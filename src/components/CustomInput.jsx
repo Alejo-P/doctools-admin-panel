@@ -12,6 +12,7 @@ const CustomInput = ({
     Iname,
     Itype = "text",
     Ilabel = "",
+    Imessage = "",
     Ivalue,
     IonChange,
     Iplaceholder,
@@ -86,6 +87,7 @@ const CustomInput = ({
                     </motion.div>
                 )}
             </div>
+            {Imessage && <p className={`text-sm mt-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{Imessage}</p>}
         </div>
     )
 }

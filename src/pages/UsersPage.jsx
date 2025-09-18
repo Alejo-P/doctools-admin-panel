@@ -118,6 +118,12 @@ const UsersPage = () => {
         setActionItems(actions);
         return () => setActionItems([]);
     }, [isDark, usersList]);
+
+    useEffect(() => {
+        if (usersList.length && usersList.find(u => u.id === selectedUser?.id)) {
+            setSelectedUser(usersList.find(u => u.id === selectedUser?.id));
+        }
+    }, [usersList])
     
     useEffect(() => {
         if (!usersList.length) {
