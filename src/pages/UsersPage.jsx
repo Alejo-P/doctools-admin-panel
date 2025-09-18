@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { LuMousePointerClick } from "react-icons/lu";
 import { MdOutlineRefresh } from "react-icons/md";
 import { IoPersonAdd } from "react-icons/io5";
+import { PiEmptyBold } from "react-icons/pi";
 
 import { useAdminContext } from '@contexts/AdminProvider';
 import { useAppContext } from '@contexts/AppProvider';
@@ -13,15 +14,27 @@ import LoadingCard from '@components/LoadingCard';
 import RoleActionModal from '@modals/RoleActionModal';
 import CreateUserModal from '@modals/CreateUserModal';
 import ActionProfileModal from '@modals/ActionProfileModal';
+import CustomInput from '@components/CustomInput';
 
 const UsersPage = () => {
     const { isDark, isMobile, setShowActions, setActionItems } = useAppContext();
     const { getAllUsers, usersList, loading, updateUser, getRolesList, rolesList, sendVerifyEmail } = useAdminContext();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredUsers, setFilteredUsers] = useState([]);
     const [showCreateUserModal, setShowCreateUserModal] = useState(false);
     const [showUserProfileModal, setShowUserProfileModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [showRolesModal, setShowRolesModal] = useState(false);
     const [showActionModal, setShowActionModal] = useState(false);
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+        if (value.trim() === '') return setFilteredUsers(usersList);
+
+        const filtered = usersList.filter(user => user.name.toLowerCase().includes(value.toLowerCase()));
+        setFilteredUsers(filtered);
+    }
 
     const handleFetchUsers = async () => {
         setShowActions(false);
@@ -123,6 +136,7 @@ const UsersPage = () => {
         if (usersList.length && usersList.find(u => u.id === selectedUser?.id)) {
             setSelectedUser(usersList.find(u => u.id === selectedUser?.id));
         }
+        setFilteredUsers(usersList);
     }, [usersList])
     
     useEffect(() => {
@@ -135,24 +149,50 @@ const UsersPage = () => {
         <>
             {loading ? <LoadingCard /> : (
                 <div className={` w-full h-full
-                    ${isMobile ? 'flex flex-col' : 'grid grid-cols-[40%_60%]'}
+                    ${isMobile ? 'flex flex-col' : 'grid grid-cols-[40%_60%] pt-2'}
                 `}>
-                    <div className='flex flex-col gap-1 flex-1 lg:border-r lg:pr-2 overflow-y-auto scrollbar'>
-                        {
-                            usersList.map(user => (
-                                <UserCard
-                                    key={user.id}
-                                    user={user}
-                                    isDark={isDark}
-                                    isMobile={isMobile}
-                                    isSelected={selectedUser?.id === user.id}
-                                    onClick={handleSelectUser}
-                                />
-                            ))
-                        }
+                    <div className='flex flex-col flex-1 pl-1 pr-1 overflow-y-auto scrollbar'>
+                        <div className={`flex flex-col gap-2 w-full rounded-lg p-2 mb-2 sticky top-0 z-10 ${isDark ? 'bg-gray-900' : 'bg-white'} border-2 ${isDark ? 'border-gray-700' : 'border-gray-300'} transition-all duration-300 ease-in-out`}>
+                            <CustomInput
+                                Itype="search"
+                                Iname="search"
+                                Ilabel='Buscar usuario'
+                                Iplaceholder="Buscar usuario..."
+                                Ivalue={searchTerm}
+                                IonChange={handleSearchChange}
+                            />
+                            <div className={`px-2 text-sm text-center ${isDark ? 'text-gray-300' : 'text-gray-700'} transition-all duration-300 ease-in-out`}>
+                                <p>
+                                    {filteredUsers.length} {filteredUsers.length === 1 ? 'usuario' : 'usuarios'} encontrado{filteredUsers.length === 1 ? '' : 's'}
+                                </p>
+                            </div>
+                        </div>
+                        {filteredUsers.length ? (
+                            <div className='flex flex-col gap-2 w-full h-full p-2'>
+                                {filteredUsers.map(user => (
+                                    <UserCard
+                                        key={user.id}
+                                        user={user}
+                                        isDark={isDark}
+                                        isMobile={isMobile}
+                                        isSelected={selectedUser?.id === user.id}
+                                        onClick={handleSelectUser}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className={`flex flex-col items-center justify-center h-full gap-4 rounded-lg transition-all duration-300 ease-in-out ${isDark ? 'bg-gray-900' : 'bg-white'} border-2 ${isDark ? 'border-gray-700' : 'border-gray-300'} p-4`}>
+                                <div className={`flex items-center justify-center p-4 rounded-lg transition-all duration-300 ease-in-out
+                                    ${isDark ? 'bg-gray-800' : 'bg-gray-300'}
+                                `}>
+                                    <PiEmptyBold className='text-2xl' />
+                                </div>
+                                <p>No hay resultados para mostrar</p>
+                            </div>
+                        )}
                     </div>
                     {!isMobile && (
-                        <div className='flex overflow-y-auto pl-2 scrollbar flex-col gap-2 w-full h-full'>
+                        <div className='flex overflow-y-auto p-2 scrollbar flex-col gap-2 w-full h-full'>
                             {!selectedUser ? (
                                 <div className={`flex flex-col items-center justify-center h-full gap-4 rounded-lg transition-all duration-300 ease-in-out ${isDark ? 'bg-gray-900' : 'bg-white'} p-4`}>
                                     <div className={`flex items-center justify-center p-4 rounded-lg transition-all duration-300 ease-in-out

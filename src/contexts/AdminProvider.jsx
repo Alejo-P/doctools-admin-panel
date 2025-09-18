@@ -59,7 +59,7 @@ export const AdminProvider = ({ children }) => {
         });
 
         if (response) {
-            setUsersList((prev) => [...prev, response]);
+            setUsersList((prev) => [...prev, response.user]);
         }
 
         const success = response ? true : false;

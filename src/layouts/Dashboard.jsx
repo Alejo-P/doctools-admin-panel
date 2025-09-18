@@ -34,7 +34,7 @@ const Dashboard = () => {
                 pauseOnHover
                 draggable
             />
-            <div className={`flex flex-1 p-2 transition-all duration-300 overflow-y-auto scrollbar
+            <div className={`flex flex-1 transition-all duration-300 overflow-y-auto scrollbar
                 ${isDark ? 'text-white bg-gray-800' : 'text-gray-900 bg-gray-200'}
                 scrollbar-thumb-rounded-full scrollbar-track-rounded-full`}
             >

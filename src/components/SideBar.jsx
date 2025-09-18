@@ -77,8 +77,8 @@ const SideBar = ({
     return (
         <div
             className={`
-                flex flex-col justify-between overflow-hidden
-                ${isDark ? 'text-white' : 'text-gray-900'}
+                flex flex-col justify-between overflow-hidden border-b
+                ${isDark ? 'text-white border-gray-600' : 'text-gray-900 border-gray-300'}
                 transition-all duration-300
             `}
         >

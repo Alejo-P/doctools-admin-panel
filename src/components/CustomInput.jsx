@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { MdOutlinePassword } from "react-icons/md";
 import { FiUser, FiMail, FiShield, FiFile } from "react-icons/fi";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
-import { IoText } from "react-icons/io5";
+import { IoText, IoSearch } from "react-icons/io5";
 
 // Importamos el contexto
 import { useAppContext } from '@contexts/AppProvider';
@@ -47,7 +47,8 @@ const CustomInput = ({
                         Itype === "username" ? "text" :
                         Itype === "security" ? "text" :
                         Itype === "file" ? "file" :
-                        Itype
+                        Itype === "search" ? "search" :
+                        "text"
                     }
                     id={Iname}
                     name={Iname}
@@ -71,6 +72,7 @@ const CustomInput = ({
                         Itype === "username" ? <FiUser className="text-2xl" /> :
                         Itype === "security" ? <FiShield className="text-2xl" /> :
                         Itype === "file" ? <FiFile className="text-2xl" /> :
+                        Itype === "search" ? <IoSearch className="text-2xl" /> :
                         <IoText className="text-2xl" />
                     }
                 </div>
