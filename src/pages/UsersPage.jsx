@@ -39,6 +39,7 @@ const UsersPage = () => {
     const handleFetchUsers = async () => {
         setShowActions(false);
         setSelectedUser(null);
+        setSearchTerm('');
         setShowCreateUserModal(false);
         await getAllUsers();
         await getRolesList();
