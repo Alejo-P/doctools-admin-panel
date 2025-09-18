@@ -169,7 +169,7 @@ const UsersPage = () => {
                             </div>
                         </div>
                         {filteredUsers.length ? (
-                            <div className='flex flex-col gap-2 w-full h-full p-2'>
+                            <div className='flex flex-col gap-2 w-full h-full'>
                                 {filteredUsers.map(user => (
                                     <UserCard
                                         key={user.id}
@@ -182,7 +182,7 @@ const UsersPage = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div className={`flex flex-col items-center justify-center h-full gap-4 rounded-lg transition-all duration-300 ease-in-out ${isDark ? 'bg-gray-900' : 'bg-white'} border-2 ${isDark ? 'border-gray-700' : 'border-gray-300'} p-4`}>
+                            <div className={`flex flex-col items-center justify-center h-full gap-4 rounded-lg transition-all duration-300 ease-in-out ${isDark ? 'bg-gray-900' : 'bg-white'} border-2 ${isDark ? 'border-gray-700' : 'border-gray-300'} p-2`}>
                                 <div className={`flex items-center justify-center p-4 rounded-lg transition-all duration-300 ease-in-out
                                     ${isDark ? 'bg-gray-800' : 'bg-gray-300'}
                                 `}>
@@ -193,7 +193,7 @@ const UsersPage = () => {
                         )}
                     </div>
                     {!isMobile && (
-                        <div className='flex overflow-y-auto p-2 scrollbar flex-col gap-2 w-full h-full'>
+                        <div className='flex overflow-y-auto scrollbar flex-col gap-2 w-full h-full'>
                             {!selectedUser ? (
                                 <div className={`flex flex-col items-center justify-center h-full gap-4 rounded-lg transition-all duration-300 ease-in-out ${isDark ? 'bg-gray-900' : 'bg-white'} p-4`}>
                                     <div className={`flex items-center justify-center p-4 rounded-lg transition-all duration-300 ease-in-out
