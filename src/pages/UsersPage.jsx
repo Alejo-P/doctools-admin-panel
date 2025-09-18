@@ -168,7 +168,6 @@ const UsersPage = () => {
                                         user={selectedUser}
                                         isDark={isDark}
                                         onSubmit={handleUpdateUser}
-                                        handleAvatarModal={() => { }}
                                         handleRolesModal={handleRolesModal}
                                         isLoading={loading}
                                     />

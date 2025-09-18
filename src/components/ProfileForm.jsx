@@ -41,6 +41,10 @@ const ProfileForm = ({
             [name]: value
         }));
     }
+
+    const onClickAvatar = () => {
+        handleAvatarModal && handleAvatarModal();
+    }
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -88,7 +92,7 @@ const ProfileForm = ({
                 <UserAvatar
                     user={user}
                     isDark={isDark}
-                    {...(user.id === authUser.id ? { onClick: handleAvatarModal } : {})}
+                    {...(user.id === authUser.id ? { onClick: onClickAvatar } : {})}
                     isLoading={isLoading}
                 />
             </div>
