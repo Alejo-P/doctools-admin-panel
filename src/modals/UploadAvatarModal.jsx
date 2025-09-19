@@ -4,7 +4,6 @@ import { FaUpload } from "react-icons/fa6";
 import { ImSpinner9 } from "react-icons/im";
 import { PiEmptyBold } from "react-icons/pi";
 import { FaArrowRight, FaTrash } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
 
 import { useAppContext } from '@contexts/AppProvider';
 import { useAdminContext } from '@contexts/AdminProvider';
