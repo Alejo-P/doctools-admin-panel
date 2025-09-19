@@ -1,21 +1,28 @@
+// @ts-check
 import React, { useState, useRef } from 'react'
 import { FaUpload } from "react-icons/fa6";
 import { ImSpinner9 } from "react-icons/im";
+import { PiEmptyBold } from "react-icons/pi";
+import { FaArrowRight } from "react-icons/fa";
 
 import { useAppContext } from '@contexts/AppProvider';
-import { useAuthContext } from '@contexts/AuthProvider';
+import { useAdminContext } from '@contexts/AdminProvider';
 
+import { ImageInfo } from '@constants/vars';
 import CustomInput from '@components/CustomInput';
 import Modal from '@ui/Modal';
 
 const UploadAvatarModal = ({
     isOpen,
+    userInfo,
     onClose,
     isDark
 }) => {
     const { handleNotificacion } = useAppContext();
-    const { user, uploadAvatar, loading } = useAuthContext();
+    const { uploadAvatar } = useAdminContext();
+    const [loading, setLoading] = useState(false);
     const [avatar, setAvatar] = useState(null);
+    const [currentAvatar] = useState(userInfo?.avatar?.url || null);
     const [preview, setPreview] = useState(null);
     const fileInput = useRef(null);
 
@@ -23,6 +30,12 @@ const UploadAvatarModal = ({
         setTimeout(() => {
             onClose();
         }, 200);
+    }
+
+    const clearInput = () => {
+        setAvatar(null); // Restablece el estado del archivo si es demasiado grande
+        setPreview(null); // Restablece la vista previa si es demasiado grande
+        fileInput.current.value = null; // Limpia el input de archivo
     }
 
     const handleFileChange = (e) => {
@@ -33,7 +46,8 @@ const UploadAvatarModal = ({
         if (selectedFile) {
             // Validar si la imagen es cuadrada
             const img = new Image();
-            img.src = URL.createObjectURL(selectedFile);
+            const objectURL = URL.createObjectURL(selectedFile);
+            img.src = objectURL;
             img.onload = () => {
                 if (img.width !== img.height) {
                     handleNotificacion('error', 'La imagen debe ser cuadrada', 5000);
@@ -42,17 +56,29 @@ const UploadAvatarModal = ({
                     fileInput.current.value = null; // Limpia el input de archivo
                     return;
                 }
-                // Si la imagen es cuadrada, se establece la vista previa
-                else {
-                    setPreview(URL.createObjectURL(selectedFile)); // Crea una URL de objeto para la vista previa
-                    setTimeout(() => {
-                        URL.revokeObjectURL(img.src); // Libera la URL del objeto después de usarla
-                    }, 1000);
+                
+                if (img.width < ImageInfo.MIN_WIDTH || img.height < ImageInfo.MIN_HEIGHT) {
+                    handleNotificacion('error', `La imagen es demasiado pequeña. Mínimo ${ImageInfo.MIN_WIDTH}px x ${ImageInfo.MIN_HEIGHT}px`, 5000);
+                    clearInput();
+                    return;
                 }
+
+                if (img.width > ImageInfo.MAX_WIDTH || img.height > ImageInfo.MAX_HEIGHT) {
+                    handleNotificacion('error', `La imagen es demasiado grande. Máximo ${ImageInfo.MAX_WIDTH}px x ${ImageInfo.MAX_HEIGHT}px`, 5000);
+                    clearInput();
+                    return;
+                }
+
+                // Si la imagen es cuadrada, se establece la vista previa
+                setPreview(objectURL); // Crea una URL de objeto para la vista previa
+                setTimeout(() => {
+                    URL.revokeObjectURL(objectURL); // Libera la URL del objeto después de usarla
+                }, 1000);
             };
-            img.onerror = () => {
+            img.onerror = (e) => {
+                console.error('Error al cargar la imagen', e);
                 handleNotificacion('error', 'Error al cargar la imagen', 5000); // Maneja el error de carga de la imagen
-                setAvatar(null); // Restablece el estado del archivo si hay un error
+                clearInput();
             }
         } else {
             setPreview(null); // Si no hay archivo, restablece la vista previa
@@ -69,11 +95,11 @@ const UploadAvatarModal = ({
 
         const formData = new FormData();
         formData.append('file', avatar); // Agrega el archivo al FormData
-        formData.append('user_id', user.id); // Agrega el ID del usuario al FormData
-
+        formData.append('user_id', userInfo.id); // Agrega el ID del usuario al FormData
+        setLoading(true);
         await uploadAvatar(formData); // Llama a la función para subir el avatar
-        setAvatar(null); // Restablece el estado del archivo
-        setPreview(null); // Restablece la vista previa
+        setLoading(false);
+        clearInput(); // Limpia el input y la vista previa
         setTimeout(() => {
             onClose(); // Cierra el modal después de subir el avatar
         }, 200);
@@ -89,6 +115,7 @@ const UploadAvatarModal = ({
                     Itype="file"
                     Iname="avatar"
                     Iplaceholder="Selecciona una imagen"
+                    Imessage='*La imagen debe ser cuadrada'
                     Irequired
                     IonChange={handleFileChange}
                     Iaccept="image/*"
@@ -96,19 +123,41 @@ const UploadAvatarModal = ({
                     Iref={fileInput}
                 />
             </form>
-            <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold">
-                Selecciona una imagen para tu avatar (la imagen debe ser cuadrada)
-            </p>
-            <div className="mt-4 w-full flex justify-center items-center">
-                {preview ? (
-                    <img
-                        src={preview}
-                        alt="Vista previa del avatar"
-                        className="w-32 h-32 rounded-full object-cover border-2 border-gray-300"
-                    />
-                ) : (
-                    <p className="text-gray-500 font-semibold">Selecciona una imagen para obtener una vista previa del avatar</p>
+            <div className="mt-4 w-full flex gap-2 justify-center items-center">
+                <div className="flex flex-col items-center mr-4 gap-2">
+                    <p className="text-gray-500 font-semibold">Avatar actual:</p>
+                    {currentAvatar ? (
+                        <img
+                            src={currentAvatar}
+                            alt="Avatar actual"
+                            className="w-22 h-22 rounded-full object-cover border-2 border-gray-300"
+                        />
+                    ): (
+                        <div className="w-22 h-22 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center">
+                            <PiEmptyBold className="text-4xl text-gray-400" />
+                        </div>
+                    )}
+                </div>
+                {currentAvatar && (
+                    <div className="flex flex-col items-center mx-4 gap-2">
+                        <p className="text-gray-500 font-semibold p-3"/>
+                        <FaArrowRight className={`text-2xl ${isDark ? 'text-gray-300' : 'text-gray-700'}`} />
+                    </div>
                 )}
+                <div className="flex flex-col items-center ml-4 gap-2">
+                    <p className="text-gray-500 font-semibold">Vista previa:</p>
+                    {preview ? (
+                        <img
+                            src={preview}
+                            alt="Vista previa del avatar"
+                            className="w-22 h-22 rounded-full object-cover border-2 border-gray-300"
+                        />
+                    ) : (
+                        <div className="w-22 h-22 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center">
+                            <PiEmptyBold className="text-4xl text-gray-400" />
+                        </div>
+                    )}
+                </div>
             </div>
             <div className="w-full flex justify-end gap-4">
                 <button

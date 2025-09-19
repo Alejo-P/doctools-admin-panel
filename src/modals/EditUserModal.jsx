@@ -10,6 +10,7 @@ const EditUserModal = ({
     onClose,
     isDark,
     handleUpdate,
+    handleAvatarModal,
     handleRolesModal,
     handleActionModal
 }) => {
@@ -30,6 +31,7 @@ const EditUserModal = ({
                 user={user}
                 isDark={isDark}
                 onSubmit={handleSubmit}
+                handleAvatarModal={handleAvatarModal}
                 handleRolesModal={handleRolesModal}
                 isLoading={isLoading}
             />

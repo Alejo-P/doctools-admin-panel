@@ -169,6 +169,37 @@ export const AdminProvider = ({ children }) => {
         return response;
     }
 
+    const uploadAvatar = async (formData) => {
+        const response = await request({
+            method: 'put',
+            url: '/profile/upload_avatar',
+            payload: formData,
+            config: {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            },
+            notify: {
+                success: false,
+                error: true
+            }
+        });
+
+        if (response) {
+            handleNotificacion('success', 'Avatar actualizado correctamente', 5000);
+            if (user?.id === response.user_id) {
+                setUser({ ...user, avatar: response.avatar });
+            } else {
+                setUsersList((prev) => prev.map((u) => {
+                    if (u.id === response.user_id) {
+                        return { ...u, avatar: response.avatar };
+                    }
+                    return u;
+                }));
+            }
+        }
+    };
+
     const addRole = async (role, user_id) => {
         const response = await request({
             method: 'post',
@@ -290,6 +321,7 @@ export const AdminProvider = ({ children }) => {
         usersList,
         rolesList,
         avatarList,
+        uploadAvatar,
         setRolesList,
         setUsersList,
         getAllUsers,

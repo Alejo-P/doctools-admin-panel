@@ -92,7 +92,7 @@ const ProfileForm = ({
                 <UserAvatar
                     user={user}
                     isDark={isDark}
-                    {...(user.id === authUser.id ? { onClick: onClickAvatar } : {})}
+                    {...(handleAvatarModal ? { onClick: onClickAvatar } : {})}
                     isLoading={isLoading}
                 />
             </div>

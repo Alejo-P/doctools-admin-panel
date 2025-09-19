@@ -114,30 +114,6 @@ export const AuthProvider = ({ children }) => {
         return success;
     };
 
-    const uploadAvatar = async (formData) => {
-        setLoading(true);
-        const response = await request({
-            method: 'put',
-            url: '/profile/upload_avatar',
-            payload: formData,
-            config: {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            },
-            notify: {
-                success: false,
-                error: true
-            }
-        });
-
-        if (response) {
-            handleNotificacion('success', 'Avatar actualizado correctamente', 5000);
-            setUser({ ...user, avatar: response.avatar });
-        }
-        setLoading(false);
-    };
-
     const verifyEmail = async (token) => {
         setLoading(true);
         const response = await request({
@@ -177,8 +153,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         profile,
         updateProfile,
-        updatePassword,
-        uploadAvatar
+        updatePassword
     }}, [user, loading]);
 
     return (

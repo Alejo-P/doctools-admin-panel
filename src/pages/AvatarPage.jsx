@@ -68,18 +68,19 @@ const AvatarPage = () => {
     return (
         <>
             {loading ? <LoadingCard /> : (
-                <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 w-full h-full gap-2 p-2'>
-                    {
-                        avatarList.map(avatar => (
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full gap-2 p-2'>
+                    {avatarList.map(avatar => {
+                        let avatarInfo = { ...avatar };
+                        avatarInfo.formattedDate = formatDate(avatar.created_at);
+                        return (
                             <AvatarCard
-                                key={avatar.id}
-                                avatar={avatar}
+                                key={avatarInfo.id}
+                                avatar={avatarInfo}
                                 isDark={isDark}
-                                handleFormatDate={formatDate}
                                 isMobile={isMobile}
                             />
-                        ))
-                    }
+                        )
+                    })}
                 </div>
             )}
         </>

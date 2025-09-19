@@ -19,6 +19,7 @@ import ProfileCard from './ProfileCard';
 import EditProfileModal from '@modals/EditProfileModal';
 import RoleActionModal from '@modals/RoleActionModal';
 import UploadAvatarModal from '@modals/UploadAvatarModal';
+import LogoutModal from '@modals/LogoutModal';
 
 const SideBar = ({
     isDark,
@@ -32,6 +33,7 @@ const SideBar = ({
     const [showEditProfileModal, setShowEditProfileModal] = useState(false);
     const [showRolesModal, setShowRolesModal] = useState(false);
     const [showUploadAvatarModal, setShowUploadAvatarModal] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -47,9 +49,17 @@ const SideBar = ({
         setShowRolesModal(!showRolesModal);
     }
 
+    const handleLogoutModal = () => {
+        setShowLogoutModal(!showLogoutModal);
+    };
+
     const handleAvatarModal = () => {
         setShowUploadAvatarModal(!showUploadAvatarModal);
     };
+
+    const handleLogout = () => {
+        logout();
+    }
 
     const handleTheme = () => {
         changeTheme(!isDark);
@@ -154,7 +164,7 @@ const SideBar = ({
                                     </button>
                                     <ReactTooltip id="temaLabel" place="top" delayShow={100}/>
                                     <button
-                                        onClick={logout}
+                                        onClick={handleLogoutModal}
                                         className={`flex gap-2 p-2 rounded-lg transition-all duration-300
                                             ${isDark ? 'bg-red-700 text-white' : 'bg-red-300 text-gray-900 hover:bg-red-400'} 
                                             hover:scale-95 shadow-lg hover:shadow-xl cursor-pointer
@@ -177,7 +187,7 @@ const SideBar = ({
                     <ProfileCard
                         user={user}
                         isDark={isDark}
-                        logout={logout}
+                        logout={handleLogoutModal}
                         handleEditProfile={handleEditProfile}
                         handleFocusOut={handleProfileCard}
                         handleChangeTheme={handleTheme}
@@ -186,38 +196,41 @@ const SideBar = ({
                     />
                 )
             }
-            {
-                showEditProfileModal && (
-                    <EditProfileModal
-                        user={user}
-                        isOpen={showEditProfileModal}
-                        onClose={handleEditProfile}
-                        handleRolesModal={handleRolesModal}
-                        handleAvatarModal={handleAvatarModal}
-                        isDark={isDark}
-                    />
-                )
-            }
-            {
-                showRolesModal && (
-                    <RoleActionModal
-                        isOpen={showRolesModal}
-                        roleList={rolesList}
-                        userInfo={user}
-                        handleModal={handleRolesModal}
-                        isDark={isDark}
-                    />
-                )
-            }
-            {
-                showUploadAvatarModal && (
-                    <UploadAvatarModal
-                        isOpen={showUploadAvatarModal}
-                        onClose={handleAvatarModal}
-                        isDark={isDark}
-                    />
-                )
-            }
+            {showEditProfileModal && (
+                <EditProfileModal
+                    user={user}
+                    isOpen={showEditProfileModal}
+                    onClose={handleEditProfile}
+                    handleRolesModal={handleRolesModal}
+                    handleAvatarModal={handleAvatarModal}
+                    isDark={isDark}
+                />
+            )}
+            {showRolesModal && (
+                <RoleActionModal
+                    isOpen={showRolesModal}
+                    roleList={rolesList}
+                    userInfo={user}
+                    handleModal={handleRolesModal}
+                    isDark={isDark}
+                />
+            )}
+            {showUploadAvatarModal && (
+                <UploadAvatarModal
+                    isOpen={showUploadAvatarModal}
+                    onClose={handleAvatarModal}
+                    userInfo={user}
+                    isDark={isDark}
+                />
+            )}
+            {showLogoutModal && (
+                <LogoutModal
+                    isOpen={showLogoutModal}
+                    onClose={handleLogoutModal}
+                    handleLogout={handleLogout}
+                    isDark={isDark}
+                />
+            )}
             {/* Menú */}
             <div className='flex-1 flex overflow-x-auto items-center md:justify-center md:overflow-hidden'>
                 {menuItems.map((item, index) => (

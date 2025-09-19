@@ -14,6 +14,7 @@ import LoadingCard from '@components/LoadingCard';
 import RoleActionModal from '@modals/RoleActionModal';
 import CreateUserModal from '@modals/CreateUserModal';
 import ActionProfileModal from '@modals/ActionProfileModal';
+import UploadAvatarModal from '@modals/UploadAvatarModal';
 import CustomInput from '@components/CustomInput';
 
 const UsersPage = () => {
@@ -26,20 +27,26 @@ const UsersPage = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [showRolesModal, setShowRolesModal] = useState(false);
     const [showActionModal, setShowActionModal] = useState(false);
+    const [showUploadAvatarModal, setShowUploadAvatarModal] = useState(false);
 
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
         if (value.trim() === '') return setFilteredUsers(usersList);
 
-        const filtered = usersList.filter(user => user.name.toLowerCase().includes(value.toLowerCase()));
+        const filtered = usersList.filter(user => user.name.toLowerCase().includes(value.trim().toLowerCase()));
         setFilteredUsers(filtered);
+    }
+
+    const handleUploadAvatarModal = () => {
+        setShowUploadAvatarModal(!showUploadAvatarModal);
     }
 
     const handleFetchUsers = async () => {
         setShowActions(false);
         setSelectedUser(null);
         setSearchTerm('');
+        setFilteredUsers([]);
         setShowCreateUserModal(false);
         await getAllUsers();
         await getRolesList();
@@ -215,6 +222,7 @@ const UsersPage = () => {
                                         user={selectedUser}
                                         isDark={isDark}
                                         onSubmit={handleUpdateUser}
+                                        handleAvatarModal={handleUploadAvatarModal}
                                         handleRolesModal={handleRolesModal}
                                         isLoading={loading}
                                     />
@@ -234,6 +242,7 @@ const UsersPage = () => {
                             isOpen={showUserProfileModal}
                             onClose={handleCloseEditModal}
                             isDark={isDark}
+                            handleAvatarModal={handleUploadAvatarModal}
                             handleUpdate={handleUpdateUser}
                             handleRolesModal={handleRolesModal}
                             handleActionModal={handleActionModal}
@@ -262,6 +271,14 @@ const UsersPage = () => {
                             setUserInfo={setSelectedUser}
                             actionType={selectedUser?.is_active ? 'disable' : 'enable'}
                             userInfo={selectedUser}
+                            isDark={isDark}
+                        />
+                    )}
+                    {showUploadAvatarModal && (
+                        <UploadAvatarModal
+                            isOpen={showUploadAvatarModal}
+                            userInfo={selectedUser}
+                            onClose={handleUploadAvatarModal}
                             isDark={isDark}
                         />
                     )}

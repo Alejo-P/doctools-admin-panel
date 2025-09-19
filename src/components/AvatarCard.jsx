@@ -1,38 +1,48 @@
-import React from 'react'
+// AvatarCard.js
+import React from "react"
+import clsx from "clsx"
 
-const AvatarCard = ({
-    avatar,
-    onClick,
-    isDark,
-    handleFormatDate,
-    isMobile = false
-}) => {
-    return (
-        <div className={`flex flex-col h-fit items-center border-2 rounded-lg ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-400'}
-            cursor-pointer transition-transform duration-200 ease-in-out
-        `}>
-            <div className={`flex items-center justify-center rounded-t-lg
-                ${isDark ? 'bg-gray-900' : 'bg-gray-400'}
-            `}>
-                <img src={avatar.url} alt={avatar.name || ''} onClick={onClick} className="w-fit h-fit rounded-t-lg" />
-            </div>
-            <div className='flex flex-col items-center p-2'>
-                <h2 className={`text-lg font-semibold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>Detalles</h2>
-                {
-                    [
-                        { label: 'Nombre', value: avatar.name },
-                        { label: 'Subido el', value: avatar.created_at }
-                    ].map((item, index) => (
-                        <div key={index} className="truncate">
-                            <p className={`${isDark ? 'text-gray-100' : 'text-gray-900'}`}>
-                                {!isMobile && <strong>{item.label}:</strong>} {item.value}
-                            </p>
-                        </div>
-                    ))
-                }
-            </div>
-        </div>
-    )
+const AvatarCard = ({ avatar, isDark, isMobile = false, onClick }) => {
+  const textColor = isDark ? "text-gray-100" : "text-gray-900"
+  const borderColor = isDark ? "border-gray-500" : "border-gray-300"
+  const bgColor = isDark ? "bg-gray-700" : "bg-white"
+
+  return (
+    <div
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      className={clsx(
+        "flex flex-col items-center rounded-lg shadow-md border transition-all duration-200",
+        "hover:scale-[1.02] hover:shadow-lg cursor-pointer",
+        bgColor,
+        borderColor,
+        "p-4 max-w-sm mx-auto w-full text-center",
+      )}
+    >
+      {/* Avatar */}
+      <div className="w-24 h-24 rounded-full overflow-hidden border-2 mb-4">
+        <img
+          src={avatar.url}
+          alt={avatar.name ? `Avatar de ${avatar.name}` : "Avatar"}
+          className="object-cover w-full h-full"
+        />
+      </div>
+
+      {/* Info */}
+      <div className="text-center w-full">
+        <h2 className={clsx("font-semibold mb-1", isMobile ? "text-base" : "text-lg", textColor)}>
+          {avatar.name}
+        </h2>
+        <p className={clsx("text-sm truncate", textColor)}>
+          <strong>Subido el:</strong> {avatar.formattedDate}
+        </p>
+        <p className={clsx("text-sm truncate", textColor)}>
+            <strong>Dimensiones:</strong> {avatar.width}px × {avatar.height}px
+        </p>
+      </div>
+    </div>
+  )
 }
 
 export default AvatarCard
