@@ -200,6 +200,37 @@ export const AdminProvider = ({ children }) => {
         }
     };
 
+    const deleteAvatar = async (formData) => {
+        const response = await request({
+            method: 'delete',
+            url: '/profile/delete_avatar',
+            payload: formData,
+            config: {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            },
+            notify: {
+                success: false,
+                error: true
+            }
+        });
+
+        if (response) {
+            handleNotificacion('success', 'Avatar eliminado correctamente', 5000);
+            if (user?.id === response.user_id) {
+                setUser({ ...user, avatar: null });
+            } else {
+                setUsersList((prev) => prev.map((u) => {
+                    if (u.id === response.user_id) {
+                        return { ...u, avatar: null };
+                    }
+                    return u;
+                }));
+            }
+        }
+    };
+
     const addRole = async (role, user_id) => {
         const response = await request({
             method: 'post',
@@ -322,6 +353,7 @@ export const AdminProvider = ({ children }) => {
         rolesList,
         avatarList,
         uploadAvatar,
+        deleteAvatar,
         setRolesList,
         setUsersList,
         getAllUsers,

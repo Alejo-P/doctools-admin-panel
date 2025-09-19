@@ -3,7 +3,8 @@ import React, { useState, useRef } from 'react'
 import { FaUpload } from "react-icons/fa6";
 import { ImSpinner9 } from "react-icons/im";
 import { PiEmptyBold } from "react-icons/pi";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaTrash } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 import { useAppContext } from '@contexts/AppProvider';
 import { useAdminContext } from '@contexts/AdminProvider';
@@ -19,8 +20,9 @@ const UploadAvatarModal = ({
     isDark
 }) => {
     const { handleNotificacion } = useAppContext();
-    const { uploadAvatar } = useAdminContext();
-    const [loading, setLoading] = useState(false);
+    const { uploadAvatar, deleteAvatar } = useAdminContext();
+    const [uploadLoading, setUploadLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
     const [avatar, setAvatar] = useState(null);
     const [currentAvatar] = useState(userInfo?.avatar?.url || null);
     const [preview, setPreview] = useState(null);
@@ -86,6 +88,21 @@ const UploadAvatarModal = ({
         }
     };
 
+    const handleDelete = async () => {
+        const confirm = window.confirm(`¿Eliminar avatar?`);
+        if (!confirm) return;
+
+        const formData = new FormData();
+        formData.append('user_id', userInfo.id); // Agrega el ID del usuario al FormData
+        setDeleteLoading(true);
+        await deleteAvatar(formData);
+        setDeleteLoading(false);
+        clearInput(); // Limpia el input y la vista previa
+        setTimeout(() => {
+            onClose(); // Cierra el modal después de eliminar el avatar
+        }, 200);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault(); // Evita el comportamiento por defecto del formulario
         if (!avatar) return; // Si no hay archivo, no hacemos nada
@@ -96,9 +113,9 @@ const UploadAvatarModal = ({
         const formData = new FormData();
         formData.append('file', avatar); // Agrega el archivo al FormData
         formData.append('user_id', userInfo.id); // Agrega el ID del usuario al FormData
-        setLoading(true);
+        setUploadLoading(true);
         await uploadAvatar(formData); // Llama a la función para subir el avatar
-        setLoading(false);
+        setUploadLoading(false);
         clearInput(); // Limpia el input y la vista previa
         setTimeout(() => {
             onClose(); // Cierra el modal después de subir el avatar
@@ -119,7 +136,7 @@ const UploadAvatarModal = ({
                     Irequired
                     IonChange={handleFileChange}
                     Iaccept="image/*"
-                    Idisabled={loading}
+                    Idisabled={uploadLoading || deleteLoading}
                     Iref={fileInput}
                 />
             </form>
@@ -138,12 +155,10 @@ const UploadAvatarModal = ({
                         </div>
                     )}
                 </div>
-                {currentAvatar && (
-                    <div className="flex flex-col items-center mx-4 gap-2">
-                        <p className="text-gray-500 font-semibold p-3"/>
-                        <FaArrowRight className={`text-2xl ${isDark ? 'text-gray-300' : 'text-gray-700'}`} />
-                    </div>
-                )}
+                <div className="flex flex-col items-center mx-4 gap-2">
+                    <p className="text-gray-500 font-semibold p-3"/>
+                    <FaArrowRight className={`text-2xl ${isDark ? 'text-gray-300' : 'text-gray-700'}`} />
+                </div>
                 <div className="flex flex-col items-center ml-4 gap-2">
                     <p className="text-gray-500 font-semibold">Vista previa:</p>
                     {preview ? (
@@ -164,7 +179,7 @@ const UploadAvatarModal = ({
                     type="submit"
                     form="uploadAvatarForm"
                     className={`p-2 rounded-lg transition-all duration-300
-                        ${(!avatar || loading) ? 'cursor-not-allowed bg-gray-300 text-gray-500' 
+                        ${(!avatar || uploadLoading) ? 'cursor-not-allowed bg-gray-300 text-gray-500' 
                             :  isDark ? 'bg-blue-600 text-white' 
                             : 'bg-blue-400 text-gray-900 hover:bg-gray-400'
                         }
@@ -172,9 +187,9 @@ const UploadAvatarModal = ({
                     title="Subir"
                     data-tooltip-id="uploadLabel"
                     data-tooltip-content={`${avatar ? 'Subir avatar' : 'Selecciona un archivo primero'}`}
-                    disabled={!avatar || loading}
+                    disabled={!avatar || uploadLoading}
                 >
-                    {loading
+                    {uploadLoading
                         ? (
                             <span className="flex items-center gap-2 font-bold">
                                 <span className="animate-spin"><ImSpinner9 className="text-2xl" /></span>
@@ -188,6 +203,34 @@ const UploadAvatarModal = ({
                         )
                     }
                 </button>
+                {currentAvatar && (
+                    <button
+                        type="button"
+                        className={`p-2 rounded-lg transition-all duration-300
+                            ${deleteLoading ? 'cursor-not-allowed bg-gray-300 text-gray-500' 
+                                :  isDark ? 'bg-red-600 text-white' 
+                                : 'bg-red-400 text-gray-900 hover:bg-gray-400'
+                            }
+                            hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Eliminar"
+                        onClick={handleDelete}
+                        disabled={deleteLoading}
+                    >
+                        {deleteLoading
+                            ? (
+                                <span className="flex items-center gap-2 font-bold">
+                                    <span className="animate-spin"><ImSpinner9 className="text-2xl" /></span>
+                                    Eliminando...
+                                </span>
+                            ) : (
+                                <span className='flex items-center gap-2 font-bold'>
+                                    <FaTrash className="text-2xl" />
+                                    Eliminar avatar
+                                </span>
+                            )
+                        }
+                    </button>
+                )}
             </div>
         </Modal>
     )
