@@ -336,6 +336,21 @@ export const AdminProvider = ({ children }) => {
         setLoading(false);
     }
 
+    const getAvatarById = async (avatarId) => {
+        setLoading(true);
+        const response = await request({
+            method: 'get',
+            url: `/avatar/${avatarId}`,
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+
+        setLoading(false);
+        return response;
+    }
+
     const sendVerifyEmail = async (userId) => {
         await request({
             method: 'post',
@@ -368,7 +383,8 @@ export const AdminProvider = ({ children }) => {
         addRole,
         removeRole,
         getRolesList,
-        getAvatarList
+        getAvatarList,
+        getAvatarById
     }), [usersList, loading, rolesList, avatarList]);
 
     return (

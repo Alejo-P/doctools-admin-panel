@@ -13,6 +13,7 @@ import AvatarPage from '@pages/AvatarPage'
 import Auth from '@layouts/Auth'
 import PrivateRoute from '@routes/PrivateRoute'
 import Dashboard from '@layouts/Dashboard'
+import AvatarDetailPage from '@pages/AvatarDetailPage'
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
                   <Route path='users' element={<UsersPage />} />
                   <Route path='roles' element={<RolesPage />} />
                   <Route path='avatars' element={<AvatarPage />} />
+                  <Route path='avatars/:id' element={<AvatarDetailPage />} />
                   <Route path='stats' element={<span>Estadísticas</span>} />
                   <Route path='*' element={<span>404 Not Found</span>} />
                 </Route>

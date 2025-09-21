@@ -1,6 +1,6 @@
 // @ts-check
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, matchPath } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { FaMoon } from "react-icons/fa";
 import { MdOutlineWbSunny } from "react-icons/md";
@@ -38,7 +38,7 @@ const SideBar = ({
     const location = useLocation();
 
     const menuItems = [
-        { icon: MdSpaceDashboard, label: 'Dashboard', to: '/dashboard/' },
+        { icon: MdSpaceDashboard, label: 'Dashboard', to: '/dashboard' },
         { icon: FaUsers, label: 'Usuarios', to: '/dashboard/users' },
         { icon: FaShieldAlt, label: 'Roles', to: '/dashboard/roles' },
         { icon: BiSolidUserAccount, label: 'Avatares', to: '/dashboard/avatars' },
@@ -95,16 +95,57 @@ const SideBar = ({
             {/* Seccion del titulo */}
             <div className="flex items-center justify-center gap-2 p-2">
                 <img src={Logo} alt="React Logo" className="w-10 h-10" />
-                <p
-                    className={`text-lg uppercase font-bold overflow-hidden text-ellipsis
-                        ${isDark ? 'text-white' : 'text-gray-900'}
-                    `}>
+                <p className={`text-lg uppercase font-bold overflow-hidden text-ellipsis ${isDark ? 'text-white' : 'text-gray-900'} transition-all duration-300`}>
                     DocTools Admin Panel
                 </p>
                 <div className='flex flex-1 justify-end items-center gap-2'>
-                    {
-                        isMobile ? (
-                            <div className='flex items-center gap-2'>
+                    {isMobile ? (
+                        <div className='flex items-center gap-2'>
+                            <button
+                                className={`p-2 rounded-lg transition-all duration-300
+                                    ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                                    hover:scale-95 shadow-lg hover:shadow-xl
+                                `}
+                                title="Cambiar tema"
+                                data-tooltip-id="temaLabel"
+                                data-tooltip-content="Cambiar tema"
+                                onClick={handleTheme}
+                            >
+                                {isDark ? <FaMoon className="text-2xl" /> : <MdOutlineWbSunny className="text-2xl" />}
+                            </button>
+                            <ReactTooltip id="temaLabel" place="top" delayShow={100}/>
+                            <UserAvatar
+                                user={user}
+                                isDark={isDark}
+                                size={33}
+                                placeTooltip="left"
+                                onClick={handleProfileCard}
+                            />
+                        </div>
+                    ) : (
+                        <div className='flex items-center gap-2'>
+                            <div className='flex justify-center items-center'>
+                                <UserAvatar
+                                    user={user}
+                                    isDark={isDark}
+                                    size={36}
+                                    onClick={handleEditProfile}
+                                />
+                            </div>
+                            <div className='flex flex-col gap-1 justify-center items-start text-sm'>
+                                {[
+                                    {label:"Usuario", value:"name"},
+                                    {label:"Email", value:"email"},
+                                    {label:"Roles", value:"roles"}
+                                ].map((item, index) => (
+                                    <p key={index}>
+                                        <strong>{item.label}:</strong> {
+                                            Array.isArray(user[item.value]) ? user[item.value].join(', ') : user[item.value]
+                                        }
+                                    </p>
+                                ))}
+                            </div>
+                            <div className='flex flex-col items-center gap-2'>
                                 <button
                                     className={`p-2 rounded-lg transition-all duration-300
                                         ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
@@ -118,134 +159,86 @@ const SideBar = ({
                                     {isDark ? <FaMoon className="text-2xl" /> : <MdOutlineWbSunny className="text-2xl" />}
                                 </button>
                                 <ReactTooltip id="temaLabel" place="top" delayShow={100}/>
-                                <UserAvatar
-                                    user={user}
-                                    isDark={isDark}
-                                    size={33}
-                                    placeTooltip="left"
-                                    onClick={handleProfileCard}
-                                />
+                                <button
+                                    onClick={handleLogoutModal}
+                                    className={`flex gap-2 p-2 rounded-lg transition-all duration-300
+                                        ${isDark ? 'bg-red-700 text-white' : 'bg-red-300 text-gray-900 hover:bg-red-400'} 
+                                        hover:scale-95 shadow-lg hover:shadow-xl cursor-pointer
+                                    `}
+                                    title="Cerrar sesión"
+                                    data-tooltip-id="logoutLabel"
+                                    data-tooltip-content="Cerrar sesión"
+                                >
+                                    <IoLogOut className='text-2xl' />
+                                </button>
+                                <ReactTooltip id="logoutLabel" place="top" delayShow={100}/>
                             </div>
-                        ) : (
-                            <div className='flex items-center gap-2'>
-                                <div className='flex justify-center items-center'>
-                                    <UserAvatar
-                                        user={user}
-                                        isDark={isDark}
-                                        size={36}
-                                        onClick={handleEditProfile}
-                                    />
-                                </div>
-                                <div className='flex flex-col gap-1 justify-center items-start text-sm'>
-                                    {[
-                                        {label:"Usuario", value:"name"},
-                                        {label:"Email", value:"email"},
-                                        {label:"Roles", value:"roles"}
-                                    ].map((item, index) => (
-                                        <p key={index}>
-                                            <strong>{item.label}:</strong> {
-                                                Array.isArray(user[item.value]) ? user[item.value].join(', ') : user[item.value]
-                                            }
-                                        </p>
-                                    ))}
-                                </div>
-                                <div className='flex flex-col items-center gap-2'>
-                                    <button
-                                        className={`p-2 rounded-lg transition-all duration-300
-                                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                                            hover:scale-95 shadow-lg hover:shadow-xl
-                                        `}
-                                        title="Cambiar tema"
-                                        data-tooltip-id="temaLabel"
-                                        data-tooltip-content="Cambiar tema"
-                                        onClick={handleTheme}
-                                    >
-                                        {isDark ? <FaMoon className="text-2xl" /> : <MdOutlineWbSunny className="text-2xl" />}
-                                    </button>
-                                    <ReactTooltip id="temaLabel" place="top" delayShow={100}/>
-                                    <button
-                                        onClick={handleLogoutModal}
-                                        className={`flex gap-2 p-2 rounded-lg transition-all duration-300
-                                            ${isDark ? 'bg-red-700 text-white' : 'bg-red-300 text-gray-900 hover:bg-red-400'} 
-                                            hover:scale-95 shadow-lg hover:shadow-xl cursor-pointer
-                                        `}
-                                        title="Cerrar sesión"
-                                        data-tooltip-id="logoutLabel"
-                                        data-tooltip-content="Cerrar sesión"
-                                    >
-                                        <IoLogOut className='text-2xl' />
-                                    </button>
-                                    <ReactTooltip id="logoutLabel" place="top" delayShow={100}/>
-                                </div>
-                            </div>
-                        )
-                    }
+                        </div>
+                    )}
                 </div>
             </div>
-            {
-                (showProfileCard && isMobile) && (
-                    <ProfileCard
-                        user={user}
-                        isDark={isDark}
-                        logout={handleLogoutModal}
-                        handleEditProfile={handleEditProfile}
-                        handleFocusOut={handleProfileCard}
-                        handleChangeTheme={handleTheme}
-                        showCard={showProfileCard}
-                        isMobile={isMobile}
-                    />
-                )
-            }
-            {showEditProfileModal && (
-                <EditProfileModal
-                    user={user}
-                    isOpen={showEditProfileModal}
-                    onClose={handleEditProfile}
-                    handleRolesModal={handleRolesModal}
-                    handleAvatarModal={handleAvatarModal}
-                    isDark={isDark}
-                />
-            )}
-            {showRolesModal && (
-                <RoleActionModal
-                    isOpen={showRolesModal}
-                    roleList={rolesList}
-                    userInfo={user}
-                    handleModal={handleRolesModal}
-                    isDark={isDark}
-                />
-            )}
-            {showUploadAvatarModal && (
-                <UploadAvatarModal
-                    isOpen={showUploadAvatarModal}
-                    onClose={handleAvatarModal}
-                    userInfo={user}
-                    isDark={isDark}
-                />
-            )}
-            {showLogoutModal && (
-                <LogoutModal
-                    isOpen={showLogoutModal}
-                    onClose={handleLogoutModal}
-                    handleLogout={handleLogout}
-                    isDark={isDark}
-                />
-            )}
             {/* Menú */}
             <div className='flex-1 flex overflow-x-auto items-center md:justify-center md:overflow-hidden'>
-                {menuItems.map((item, index) => (
-                    <SideBarItem
-                        key={index}
+                {menuItems.map((item) => {
+                    const isDashboard = item.to === '/dashboard';
+                    const matched = matchPath(
+                        { path: item.to, end: isDashboard }, 
+                        location.pathname
+                    );
+
+                    return (
+                        <SideBarItem
+                        key={item.to}
                         icon={item.icon}
                         label={item.label}
                         to={item.to}
                         isDark={isDark}
                         onClick={handleMenuOptionClick}
-                        isSelected={location.pathname === item.to}
+                        isSelected={!!matched}
                         isMobile={isMobile}
-                    />
-                ))}
+                        />
+                    );
+                })}
             </div>
+            {isMobile && (
+                <ProfileCard
+                    user={user}
+                    isDark={isDark}
+                    logout={handleLogoutModal}
+                    handleEditProfile={handleEditProfile}
+                    handleFocusOut={handleProfileCard}
+                    handleChangeTheme={handleTheme}
+                    showCard={showProfileCard}
+                    isMobile={isMobile}
+                />
+            )}
+            <EditProfileModal
+                user={user}
+                isOpen={showEditProfileModal}
+                onClose={handleEditProfile}
+                handleRolesModal={handleRolesModal}
+                handleAvatarModal={handleAvatarModal}
+                isDark={isDark}
+            />
+            <RoleActionModal
+                isOpen={showRolesModal}
+                roleList={rolesList}
+                userInfo={user}
+                handleModal={handleRolesModal}
+                isDark={isDark}
+            />
+            <UploadAvatarModal
+                isOpen={showUploadAvatarModal}
+                onClose={handleAvatarModal}
+                userInfo={user}
+                isDark={isDark}
+            />
+            <LogoutModal
+                isOpen={showLogoutModal}
+                onClose={handleLogoutModal}
+                handleLogout={handleLogout}
+                isDark={isDark}
+            />
         </div>
     )
 }

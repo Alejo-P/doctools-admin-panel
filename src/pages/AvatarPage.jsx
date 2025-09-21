@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { MdAddPhotoAlternate } from "react-icons/md";
 import { MdOutlineRefresh } from "react-icons/md";
 import { useAppContext } from '@contexts/AppProvider'
@@ -9,11 +10,16 @@ import LoadingCard from '@components/LoadingCard'
 const AvatarPage = () => {
     const { isDark, isMobile, formatDate, setShowActions, setActionItems } = useAppContext();
     const { avatarList, getAvatarList, loading } = useAdminContext();
+    const navigate = useNavigate();
 
     const handleFetchAvatars = async () => {
         setShowActions(false);
         await getAvatarList();
         setShowActions(true);
+    }
+
+    const handleClickAvatar = (id) => {
+        navigate(`/dashboard/avatars/${id}`);
     }
 
     useEffect(() => {
@@ -78,6 +84,7 @@ const AvatarPage = () => {
                                 avatar={avatarInfo}
                                 isDark={isDark}
                                 isMobile={isMobile}
+                                onClick={() => handleClickAvatar(avatarInfo.id)}
                             />
                         )
                     })}
